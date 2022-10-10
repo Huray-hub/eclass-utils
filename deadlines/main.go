@@ -17,11 +17,13 @@ func main() {
 	)
 
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+		fmt.Println("Request URL:", r.Request.URL,
+			"failed with response:", r, "\nError:", err)
 	})
 
 	Login(c)
 	courses := GetEnrolledCourses(c.Clone())
+	assignments := FetchAssignments(c.Clone(), courses)
 
-	_ = courses
+	fmt.Println(assignments)
 }
