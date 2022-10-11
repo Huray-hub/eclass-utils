@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gocolly/colly"
 )
@@ -21,9 +22,17 @@ func main() {
 			"failed with response:", r, "\nError:", err)
 	})
 
-	Login(c)
+	err := Login(c)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
+
 	courses := GetEnrolledCourses(c.Clone())
-	assignments := FetchAssignments(c.Clone(), courses)
+
+	assignments,err := FetchAssignments(c.Clone(), courses)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
 
 	fmt.Println(assignments)
 }

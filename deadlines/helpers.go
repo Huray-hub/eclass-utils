@@ -1,34 +1,39 @@
 package main
 
 import (
-	"io/ioutil"
-	"log"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
 
 func readYaml(path string) ([]byte, error) {
-	file, err := ioutil.ReadFile(path)
+	file, err := os.ReadFile(path)
 	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
 		return nil, err
 	}
 	return file, nil
 }
 
-func decodeYaml(yamlFile []byte) map[string]string {
+func decodeYaml(yamlFile []byte) (map[string]string, error) {
 	creds := make(map[string]string, 3)
 	err := yaml.Unmarshal(yamlFile, &creds)
 	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+		return nil, err
 	}
-	return creds
+
+	return creds, nil
 }
 
 func GetConfiguration() (map[string]string, error) {
-	yamlFile, err := readYaml("/home/pskiadas/.config/eclass-deadlines-py/config.yaml")
+	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
 	}
-	return decodeYaml(yamlFile), nil
+
+	yamlFile, err := readYaml(home + "/.config/eclass-deadlines-py/config.yaml")
+	if err != nil {
+		return nil, err
+	}
+
+	return decodeYaml(yamlFile)
 }
