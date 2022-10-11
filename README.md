@@ -11,7 +11,7 @@ Fetch professors' mobile phone and email
 
 ### TODOs:
 - [x] Reverse engineer and replicate auth mechanism
-- [ ] Deadlines
+- [ ] Assignments
   - [x] Get creadentials from yaml
   - [x] Get enrolled courses
   - [x] Fetch assignments
