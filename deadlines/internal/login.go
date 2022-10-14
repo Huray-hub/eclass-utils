@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -10,12 +10,7 @@ func headHomepage(c *colly.Collector) {
 	c.Visit(BASE_URL)
 }
 
-func Login(c *colly.Collector) error {
-	cfg, err := GetConfiguration()
-	if err != nil {
-		return err
-	}
-
+func Login(baseUrl string,cfg map[string]string, c *colly.Collector) error {
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
 	})
@@ -27,7 +22,11 @@ func Login(c *colly.Collector) error {
 }
 
 func postLogin(c *colly.Collector, cfg map[string]string) {
-	cfg["submit"] = ""
+    body := make(map[string]string, 3)
 
-	c.Post(BASE_URL, cfg)
+    body["uname"] = cfg["uname"]
+    body["pass"] = cfg["pass"]
+	body["submit"] = ""
+
+	c.Post(BASE_URL, body)
 }

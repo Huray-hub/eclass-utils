@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -66,7 +66,7 @@ func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]assignment,
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL,
 			"failed with response:", r, "\nError:", err)
-        // log.Fatal(err.Error())
+		// log.Fatal(err.Error())
 	})
 
 	c.OnHTML(
@@ -83,7 +83,7 @@ func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]assignment,
 
 			newAss, err := newAssignment(tds, course.Name)
 			if err != nil {
-				return 
+				return
 			}
 
 			assignments = append(assignments, newAss)

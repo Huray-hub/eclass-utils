@@ -1,10 +1,16 @@
-package main
+package internal
 
 import (
 	"os"
 
 	"gopkg.in/yaml.v3"
 )
+
+type config struct {
+	username   string
+	password   string
+	baseDomain string
+}
 
 func readYaml(path string) ([]byte, error) {
 	file, err := os.ReadFile(path)
@@ -15,8 +21,8 @@ func readYaml(path string) ([]byte, error) {
 }
 
 func decodeYaml(yamlFile []byte) (map[string]string, error) {
-	creds := make(map[string]string, 3)
-	err := yaml.Unmarshal(yamlFile, &creds)
+	cfg := make(map[string]map[string]string, 3)
+	err := yaml.Unmarshal(yamlFile, &cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -25,12 +31,12 @@ func decodeYaml(yamlFile []byte) (map[string]string, error) {
 }
 
 func GetConfiguration() (map[string]string, error) {
-	home, err := os.UserHomeDir()
+	home, err := os.UserConfigDir()
 	if err != nil {
 		return nil, err
 	}
 
-	yamlFile, err := readYaml(home + "/.config/eclass-deadlines-py/config.yaml")
+	yamlFile, err := readYaml(home + "/eclass-deadlines-py/config.yaml")
 	if err != nil {
 		return nil, err
 	}
