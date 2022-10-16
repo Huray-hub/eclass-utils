@@ -9,24 +9,24 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type assignment struct {
+type Assignment struct {
 	course   string
 	title    string
 	deadline time.Time
 	isSent   bool
 }
 
-func (a *assignment) String() string {
+func (a *Assignment) String() string {
 	return fmt.Sprintf("%v %v %v %v", a.course, a.title, a.deadline, a.isSent)
 }
 
-func newAssignment(tds []*colly.HTMLElement, courseName string) (assignment, error) {
+func newAssignment(tds []*colly.HTMLElement, courseName string) (Assignment, error) {
 	dl, err := parseDeadline(tds[1].Text)
 	if err != nil {
-		return assignment{}, err
+		return Assignment{}, err
 	}
 
-	return assignment{
+	return Assignment{
 		course:   courseName,
 		title:    tds[0].Text,
 		deadline: dl,
@@ -46,8 +46,8 @@ func parseIsSent(h *colly.HTMLElement) bool {
 	return h.DOM.Children().First().HasClass("fa-check-square-o")
 }
 
-func FetchAssignments(c *colly.Collector, courses []course) ([]assignment, error) {
-	assignments := make([]assignment, 0, len(courses))
+func FetchAssignments(c *colly.Collector, courses []course) ([]Assignment, error) {
+	assignments := make([]Assignment, 0, len(courses))
 
 	for _, course := range courses {
 		apc, err := fetchAssignmentsPerCourse(c.Clone(), course)
@@ -60,8 +60,8 @@ func FetchAssignments(c *colly.Collector, courses []course) ([]assignment, error
 	return assignments, nil
 }
 
-func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]assignment, error) {
-	assignments := make([]assignment, 0, 10)
+func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]Assignment, error) {
+	assignments := make([]Assignment, 0, 10)
 
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL,
@@ -100,7 +100,7 @@ func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]assignment,
 }
 
 func prepareCourseUrl(course course) (string, error) {
-	url, err := url.Parse(BASE_URL + "/modules/work/")
+	url, err := url.Parse("" + "/modules/work/")
 	if err != nil {
 		return "", err
 	}

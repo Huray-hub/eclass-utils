@@ -2,28 +2,14 @@ package deadlines
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/Huray-hub/eclass-utils/deadlines/internal"
+	in "github.com/Huray-hub/eclass-utils/deadlines/internal"
 	"github.com/gocolly/colly"
 )
 
-const (
-	BASE_DOMAIN string = "eclass.uniwa.gr"
-	BASE_URL    string = "https://eclass.uniwa.gr"
-)
-
-func Deadlines() {
-	cfg, err := internal.GetConfiguration()
-
-	baseDomain := cfg["domain"]
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
 	c := colly.NewCollector(
-		colly.AllowedDomains(baseDomain),
+		colly.AllowedDomains(opts.BaseDomain),
 	)
 
 	c.OnError(func(r *colly.Response, err error) {
@@ -31,17 +17,17 @@ func Deadlines() {
 			"failed with response:", r, "\nError:", err)
 	})
 
-	err := internal.Login(c)
+    err := in.Login(opts.BaseDomain, *creds, c)
 	if err != nil {
-		log.Fatal(err.Error())
+        return nil, err 
 	}
 
-	courses := internal.GetEnrolledCourses(c.Clone())
+	courses := in.GetEnrolledCourses(opts.BaseDomain, c.Clone())
 
-	assignments, err := internal.FetchAssignments(c.Clone(), courses)
+	assignments, err := in.FetchAssignments(c.Clone(), *courses)
 	if err != nil {
-		log.Fatal(err.Error())
+        return nil, err 
 	}
 
-	fmt.Println(assignments)
+    return assignments, nil 
 }
