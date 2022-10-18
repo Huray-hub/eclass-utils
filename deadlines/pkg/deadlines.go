@@ -17,17 +17,17 @@ func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
 			"failed with response:", r, "\nError:", err)
 	})
 
-    err := in.Login(opts.BaseDomain, *creds, c)
+	err := in.Login(opts.BaseDomain, *creds, c)
 	if err != nil {
-        return nil, err 
+		return nil, err
 	}
 
 	courses := in.GetEnrolledCourses(opts.BaseDomain, c.Clone())
 
-	assignments, err := in.FetchAssignments(c.Clone(), *courses)
+	assignments, err := in.FetchAssignments(opts.BaseDomain, *courses,c.Clone())
 	if err != nil {
-        return nil, err 
+		return nil, err
 	}
 
-    return assignments, nil 
+	return assignments, nil
 }

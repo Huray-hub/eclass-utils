@@ -3,9 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
+	"os"
+	"time"
+
+	// "os"
 
 	in "github.com/Huray-hub/eclass-utils/deadlines/internal"
 	dl "github.com/Huray-hub/eclass-utils/deadlines/pkg"
+
+	// "github.com/jedib0t/go-pretty/table"
+	"github.com/olekukonko/tablewriter"
 )
 
 func main() {
@@ -13,6 +21,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	opts.PlainText = false
 
 	creds, err := in.GetCreds()
 	if err != nil {
@@ -24,5 +34,65 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	fmt.Println(assignments)
+	printAssignments(assignments, opts.PlainText)
+
+	// fmt.Println(assignments)
+}
+
+func printAssignments(a []in.Assignment, plainText bool) error {
+	if plainText {
+		return printAssignmentsPlain(a)
+	}
+
+	return printAssignmentsPretty(a)
+}
+
+func printAssignmentsPlain(a []in.Assignment) error {
+	for _, v := range a {
+		_, err := fmt.Println(v.String())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//TODO: Fix this ugly thing
+func printAssignmentsPretty(a []in.Assignment) error {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetRowLine(true)
+	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΕΧΕΙ ΥΠΟΒΛΗΘΕΙ"})
+	for _, v := range a {
+		calcRemainingTime(v)
+		var isSent string
+		if v.IsSent {
+			isSent = "yes"
+		} else {
+			isSent = "no"
+		}
+		table.Append([]string{
+			v.Course, 
+            v.Title, 
+            v.Deadline.Format("02/01/2006 15:04") + " " + calcRemainingTime(v), 
+            isSent,
+		})
+	}
+	table.Render()
+
+	return nil
+}
+
+func calcRemainingTime(a in.Assignment) string {
+	t := time.Until(a.Deadline)
+
+    switch {
+    case t < 0:
+       return "(Έληξε)"
+    case t.Hours() / 24 > 0:
+        return"(" + fmt.Sprint(math.Floor(t.Hours() / 24)) + " μέρες)" 
+    case t.Minutes() / 60 > 0:
+        return"(" + fmt.Sprint(math.Floor(t.Hours())) + " ώρες)" 
+    default:
+        return"(" + fmt.Sprint(math.Floor(t.Minutes())) + " λεπτά)" 
+    }
 }

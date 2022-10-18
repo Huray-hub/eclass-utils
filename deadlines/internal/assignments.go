@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -10,27 +11,41 @@ import (
 )
 
 type Assignment struct {
-	course   string
-	title    string
-	deadline time.Time
-	isSent   bool
+	Course   string
+	Title    string
+	Deadline time.Time
+	IsSent   bool
 }
 
 func (a *Assignment) String() string {
-	return fmt.Sprintf("%v %v %v %v", a.course, a.title, a.deadline, a.isSent)
+	return fmt.Sprintf("%v,%v,%v,%v", a.Course, a.Title, a.Deadline.String(), a.IsSent)
 }
 
-func newAssignment(tds []*colly.HTMLElement, courseName string) (Assignment, error) {
+type timeSlice []Assignment
+
+func (p timeSlice) Len() int {
+	return len(p)
+}
+
+func (p timeSlice) Less(i, j int) bool {
+	return p[i].Deadline.Before(p[j].Deadline)
+}
+
+func (p timeSlice) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+func newAssignment(tds []*colly.HTMLElement, course string) (Assignment, error) {
 	dl, err := parseDeadline(tds[1].Text)
 	if err != nil {
 		return Assignment{}, err
 	}
 
 	return Assignment{
-		course:   courseName,
-		title:    tds[0].Text,
-		deadline: dl,
-		isSent:   parseIsSent(tds[2]),
+		Course:   course,
+		Title:    tds[0].Text,
+		Deadline: dl,
+		IsSent:   parseIsSent(tds[2]),
 	}, nil
 }
 
@@ -46,21 +61,26 @@ func parseIsSent(h *colly.HTMLElement) bool {
 	return h.DOM.Children().First().HasClass("fa-check-square-o")
 }
 
-func FetchAssignments(c *colly.Collector, courses []course) ([]Assignment, error) {
-	assignments := make([]Assignment, 0, len(courses))
+func FetchAssignments(url string, courses []course, c *colly.Collector) ([]Assignment, error) {
+	assignments := make(timeSlice, 0, len(courses))
 
 	for _, course := range courses {
-		apc, err := fetchAssignmentsPerCourse(c.Clone(), course)
+		apc, err := fetchAssignmentsPerCourse(url, course, c.Clone())
 		if err != nil {
 			return nil, err
 		}
 		assignments = append(assignments, apc...)
 	}
 
+    sortAssignments(assignments)
 	return assignments, nil
 }
 
-func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]Assignment, error) {
+func sortAssignments(a timeSlice) {
+	sort.Sort(a)
+}
+
+func fetchAssignmentsPerCourse(url string, course course, c *colly.Collector) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
 
 	c.OnError(func(r *colly.Response, err error) {
@@ -89,18 +109,18 @@ func fetchAssignmentsPerCourse(c *colly.Collector, course course) ([]Assignment,
 			assignments = append(assignments, newAss)
 		})
 
-	finalUrl, err := prepareCourseUrl(course)
+	finalUrl, err := prepareCourseUrl(url, course)
 	if err != nil {
 		return nil, err
 	}
 
-	c.Visit(finalUrl)
+	c.Visit("https://" + finalUrl)
 
 	return assignments, nil
 }
 
-func prepareCourseUrl(course course) (string, error) {
-	url, err := url.Parse("" + "/modules/work/")
+func prepareCourseUrl(baseUrl string, course course) (string, error) {
+	url, err := url.Parse(baseUrl + "/modules/work/")
 	if err != nil {
 		return "", err
 	}

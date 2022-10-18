@@ -35,7 +35,7 @@ func GetEnrolledCourses(url string, c *colly.Collector) *[]course {
 			}
 		})
 
-	c.Visit(url + "/main/my_courses.php")
+	c.Visit("https://" + url + "/main/my_courses.php")
 
 	return &courses
 }

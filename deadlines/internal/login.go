@@ -7,7 +7,7 @@ import (
 )
 
 func headHomepage(url string, c *colly.Collector) {
-	c.Visit(url)
+	c.Visit("https://" + url)
 }
 
 func Login(url string, creds Creds, c *colly.Collector) error {
@@ -28,5 +28,5 @@ func postLogin(url string, creds Creds, c *colly.Collector) {
 	body["pass"] = creds.Password
 	body["submit"] = ""
 
-	c.Post(url, body)
+	c.Post("https://"+url, body)
 }
