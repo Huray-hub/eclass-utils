@@ -25,7 +25,7 @@ func extractCourseCode(url string) string {
 	return urlParts[len(urlParts)-2]
 }
 
-func GetEnrolledCourses(url string, c *colly.Collector) *[]course {
+func GetEnrolledCourses(url string, c *colly.Collector) (*[]course, error) {
 	courses := make([]course, 0, 10)
 
 	c.OnHTML("#main-content table.table-default tbody tr a",
@@ -35,7 +35,10 @@ func GetEnrolledCourses(url string, c *colly.Collector) *[]course {
 			}
 		})
 
-	c.Visit("https://" + url + "/main/my_courses.php")
+	err := c.Visit("https://" + url + "/main/my_courses.php")
+	if err != nil {
+		return nil, err
+	}
 
-	return &courses
+	return &courses, nil
 }

@@ -1,0 +1,7 @@
+creds:
+  Username: ''
+  Password: ''
+options:
+  BaseDomain: ''
+  PlainText: false
+  ExportICS: false

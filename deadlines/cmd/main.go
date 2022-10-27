@@ -7,12 +7,8 @@ import (
 	"os"
 	"time"
 
-	// "os"
-
 	in "github.com/Huray-hub/eclass-utils/deadlines/internal"
 	dl "github.com/Huray-hub/eclass-utils/deadlines/pkg"
-
-	// "github.com/jedib0t/go-pretty/table"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -23,20 +19,32 @@ func main() {
 	}
 
 	opts.PlainText = false
+	opts.ExportICS = false
 
 	creds, err := in.GetCreds()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
+
 	assignments, err := dl.Deadlines(opts, creds)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
-	printAssignments(assignments, opts.PlainText)
+	err = printAssignments(assignments, opts.PlainText)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 
-	// fmt.Println(assignments)
+	if opts.ExportICS {
+		path, err := in.ExportICS(assignments)
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		fmt.Println("stored in " + path)
+	}
 }
 
 func printAssignments(a []in.Assignment, plainText bool) error {
@@ -57,7 +65,7 @@ func printAssignmentsPlain(a []in.Assignment) error {
 	return nil
 }
 
-//TODO: Fix this ugly thing
+// TODO: Fix this ugly thing
 func printAssignmentsPretty(a []in.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
@@ -71,10 +79,10 @@ func printAssignmentsPretty(a []in.Assignment) error {
 			isSent = "no"
 		}
 		table.Append([]string{
-			v.Course, 
-            v.Title, 
-            v.Deadline.Format("02/01/2006 15:04") + " " + calcRemainingTime(v), 
-            isSent,
+			v.Course,
+			v.Title,
+			v.Deadline.Format("02/01/2006 15:04") + " " + calcRemainingTime(v),
+			isSent,
 		})
 	}
 	table.Render()
@@ -85,14 +93,14 @@ func printAssignmentsPretty(a []in.Assignment) error {
 func calcRemainingTime(a in.Assignment) string {
 	t := time.Until(a.Deadline)
 
-    switch {
-    case t < 0:
-       return "(Έληξε)"
-    case t.Hours() / 24 > 0:
-        return"(" + fmt.Sprint(math.Floor(t.Hours() / 24)) + " μέρες)" 
-    case t.Minutes() / 60 > 0:
-        return"(" + fmt.Sprint(math.Floor(t.Hours())) + " ώρες)" 
-    default:
-        return"(" + fmt.Sprint(math.Floor(t.Minutes())) + " λεπτά)" 
-    }
+	switch {
+	case t < 0:
+		return "(Έληξε)"
+	case t.Hours()/24 > 0:
+		return "(" + fmt.Sprint(math.Floor(t.Hours()/24)) + " μέρες)"
+	case t.Minutes()/60 > 0:
+		return "(" + fmt.Sprint(math.Floor(t.Hours())) + " ώρες)"
+	default:
+		return "(" + fmt.Sprint(math.Floor(t.Minutes())) + " λεπτά)"
+	}
 }

@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"syscall"
 
+	"golang.org/x/term"
 	"gopkg.in/yaml.v3"
 )
 
 type Options struct {
-	BaseDomain      string
-	PlainText       bool
-	ExportICS       bool
-	IncludedCourses []string
-	ExcludedCourses []string
+	BaseDomain            string
+	PlainText             bool
+	ExportICS             bool
+	IncludedCourses       []string
+	ExcludedCourses       []string
+	IncludedTitleKeywords map[string]string
 }
 
 type Creds struct {
@@ -86,12 +89,12 @@ func decodeYaml(yamlFile []byte) (map[string]map[string]any, error) {
 }
 
 func GetOptions() (*Options, error) {
-	home, err := os.UserConfigDir()
+	cfgPath, err := configPath()
 	if err != nil {
 		return nil, err
 	}
 
-	yamlFile, err := readYaml(home + "/eclass-deadlines-py/config.yaml")
+	yamlFile, err := readYaml(cfgPath)
 	if err != nil {
 		return nil, err
 	}
@@ -109,12 +112,12 @@ func GetOptions() (*Options, error) {
 }
 
 func GetCreds() (*Creds, error) {
-	home, err := os.UserConfigDir()
+	cfgPath, err := configPath()
 	if err != nil {
 		return nil, err
 	}
 
-	yamlFile, err := readYaml(home + "/eclass-deadlines-py/config.yaml")
+	yamlFile, err := readYaml(cfgPath)
 	if err != nil {
 		return nil, err
 	}
@@ -128,5 +131,38 @@ func GetCreds() (*Creds, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if creds.Username == "" || creds.Password == "" {
+		inputCredsStdin(creds)
+	}
+
 	return creds, nil
+}
+
+func inputCredsStdin(creds *Creds) error {
+	fmt.Print("Username: ")
+	fmt.Scanln(&creds.Username)
+
+	fmt.Print("Password: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return err
+	}
+	creds.Password = string(bytePassword)
+
+	return nil
+}
+
+func configPath() (string, error) {
+	home, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	cfgPath := home + "/eclass-utils/config.yaml"
+	if _, err = os.Stat(cfgPath); errors.Is(err, os.ErrNotExist) {
+		cfgPath = "../config/default-config.yaml"
+	}
+
+	return cfgPath, nil
 }

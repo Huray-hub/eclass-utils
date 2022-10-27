@@ -22,9 +22,12 @@ func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
 		return nil, err
 	}
 
-	courses := in.GetEnrolledCourses(opts.BaseDomain, c.Clone())
+	courses, err := in.GetEnrolledCourses(opts.BaseDomain, c.Clone())
+	if err != nil {
+		return nil, err
+	}
 
-	assignments, err := in.FetchAssignments(opts.BaseDomain, *courses,c.Clone())
+	assignments, err := in.FetchAssignments(opts.BaseDomain, *courses, c.Clone())
 	if err != nil {
 		return nil, err
 	}

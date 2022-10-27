@@ -61,7 +61,9 @@ func parseIsSent(h *colly.HTMLElement) bool {
 	return h.DOM.Children().First().HasClass("fa-check-square-o")
 }
 
-func FetchAssignments(url string, courses []course, c *colly.Collector) ([]Assignment, error) {
+func FetchAssignments(
+	url string, courses []course, c *colly.Collector,
+) ([]Assignment, error) {
 	assignments := make(timeSlice, 0, len(courses))
 
 	for _, course := range courses {
@@ -72,7 +74,7 @@ func FetchAssignments(url string, courses []course, c *colly.Collector) ([]Assig
 		assignments = append(assignments, apc...)
 	}
 
-    sortAssignments(assignments)
+	sortAssignments(assignments)
 	return assignments, nil
 }
 
@@ -80,7 +82,11 @@ func sortAssignments(a timeSlice) {
 	sort.Sort(a)
 }
 
-func fetchAssignmentsPerCourse(url string, course course, c *colly.Collector) ([]Assignment, error) {
+func fetchAssignmentsPerCourse(
+	url string,
+	course course,
+	c *colly.Collector,
+) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
 
 	c.OnError(func(r *colly.Response, err error) {
@@ -114,7 +120,10 @@ func fetchAssignmentsPerCourse(url string, course course, c *colly.Collector) ([
 		return nil, err
 	}
 
-	c.Visit("https://" + finalUrl)
+	err = c.Visit("https://" + finalUrl)
+	if err != nil {
+		return nil, err
+	}
 
 	return assignments, nil
 }
