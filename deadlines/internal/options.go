@@ -109,7 +109,7 @@ func GetOptions() (*Options, error) {
 		return nil, err
 	}
 
-	if opts.Domain == "" {
+	if opts.BaseDomain == "" {
 		inputOptsStdin(opts)
 	}
 
@@ -118,7 +118,7 @@ func GetOptions() (*Options, error) {
 
 func inputOptsStdin(opts *Options) error {
 	fmt.Println("Domain :")
-	fmt.Scanln(&opts.Domain)
+	fmt.Scanln(&opts.BaseDomain)
 
 	return nil
 }
