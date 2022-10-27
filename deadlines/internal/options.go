@@ -108,7 +108,19 @@ func GetOptions() (*Options, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if opts.Domain == "" {
+		inputOptsStdin(opts)
+	}
+
 	return opts, nil
+}
+
+func inputOptsStdin(opts *Options) error {
+	fmt.Println("Domain :")
+	fmt.Scanln(&opts.Domain)
+
+	return nil
 }
 
 func GetCreds() (*Creds, error) {
