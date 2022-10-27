@@ -117,7 +117,7 @@ func GetOptions() (*Options, error) {
 }
 
 func inputOptsStdin(opts *Options) error {
-	fmt.Println("Domain :")
+	fmt.Print("Domain :")
 	fmt.Scanln(&opts.BaseDomain)
 
 	return nil
