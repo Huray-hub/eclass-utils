@@ -12,7 +12,7 @@ on:
       - 'dev'
 
 jobs:
-  developement:
+  Continuous-Integration:
     runs-on: ubuntu-22.04
 
     steps:
