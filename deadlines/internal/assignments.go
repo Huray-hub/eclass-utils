@@ -21,27 +21,27 @@ func (a *Assignment) String() string {
 	return fmt.Sprintf("%v,%v,%v,%v", a.Course, a.Title, a.Deadline.String(), a.IsSent)
 }
 
-type timeSlice []Assignment
+type sortableSlice []Assignment
 
-func (p timeSlice) Len() int {
+func (p sortableSlice) Len() int {
 	return len(p)
 }
 
-func (p timeSlice) Less(i, j int) bool {
+func (p sortableSlice) Less(i, j int) bool {
 	return p[i].Deadline.Before(p[j].Deadline)
 }
 
-func (p timeSlice) Swap(i, j int) {
+func (p sortableSlice) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
-func newAssignment(tds []*colly.HTMLElement, course string) (Assignment, error) {
+func newAssignment(tds []*colly.HTMLElement, course string) (*Assignment, error) {
 	dl, err := parseDeadline(tds[1].Text)
 	if err != nil {
-		return Assignment{}, err
+		return nil, err
 	}
 
-	return Assignment{
+	return &Assignment{
 		Course:   course,
 		Title:    tds[0].Text,
 		Deadline: dl,
@@ -64,7 +64,7 @@ func parseIsSent(h *colly.HTMLElement) bool {
 func FetchAssignments(
 	url string, courses []course, c *colly.Collector,
 ) ([]Assignment, error) {
-	assignments := make(timeSlice, 0, len(courses))
+	assignments := make(sortableSlice, 0, len(courses))
 
 	for _, course := range courses {
 		apc, err := fetchAssignmentsPerCourse(url, course, c.Clone())
@@ -78,7 +78,7 @@ func FetchAssignments(
 	return assignments, nil
 }
 
-func sortAssignments(a timeSlice) {
+func sortAssignments(a sortableSlice) {
 	sort.Sort(a)
 }
 
@@ -112,7 +112,7 @@ func fetchAssignmentsPerCourse(
 				return
 			}
 
-			assignments = append(assignments, newAss)
+			assignments = append(assignments, *newAss)
 		})
 
 	finalUrl, err := prepareCourseUrl(url, course)

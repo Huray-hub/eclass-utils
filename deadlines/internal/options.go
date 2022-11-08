@@ -27,8 +27,9 @@ type Creds struct {
 
 func NewOptions(m map[string]any) (*Options, error) {
 	opts := Options{}
+	var err error
 	for k, v := range m {
-		err := SetField(&opts, k, v)
+		err = SetField(&opts, k, v)
 		if err != nil {
 			return nil, err
 		}
@@ -62,7 +63,7 @@ func SetField(obj any, name string, value any) error {
 	structFieldType := structFieldValue.Type()
 	val := reflect.ValueOf(value)
 	if structFieldType != val.Type() {
-		return errors.New("provided value type didn't match obj field type")
+		return fmt.Errorf("provided value type didn't match obj field type")
 	}
 
 	structFieldValue.Set(val)
@@ -166,12 +167,12 @@ func inputCredsStdin(creds *Creds) error {
 }
 
 func configPath() (string, error) {
-	home, err := os.UserConfigDir()
+	homeConfig, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 
-	cfgPath := home + "/eclass-utils/config.yaml"
+	cfgPath := homeConfig + "/eclass-utils/config.yaml"
 	if _, err = os.Stat(cfgPath); errors.Is(err, os.ErrNotExist) {
 		cfgPath = "../config/default-config.yaml"
 	}

@@ -33,12 +33,12 @@ func ExportICS(a []Assignment) (string, error) {
 	return path, nil
 }
 
+// TODO: find a way to set calendar title
 func createCalendar(a []Assignment) (*bytes.Buffer, error) {
 	// cal, err := ParseCalendar(strings.NewReader(input))
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
 	// prop:=cal.CalendarProperties
-    panic("not implemented")
 	// cal.SetName("Προθεσμίες", ))
 	cal.SetColor("red", nil)
 

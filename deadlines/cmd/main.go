@@ -18,14 +18,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	opts.PlainText = false
-	opts.ExportICS = false
-
 	creds, err := in.GetCreds()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-
 
 	assignments, err := dl.Deadlines(opts, creds)
 	if err != nil {
@@ -65,7 +61,7 @@ func printAssignmentsPlain(a []in.Assignment) error {
 	return nil
 }
 
-// TODO: Fix this ugly thing
+// TODO: Fix this ugly code
 func printAssignmentsPretty(a []in.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
