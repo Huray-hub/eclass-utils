@@ -6,27 +6,27 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type course struct {
-	Code string
+type Course struct {
+	ID   string
 	Name string
-	Url  string
+	URL  string
 }
 
-func newCourse(name, url string) course {
-	return course{
-		Code: extractCourseCode(url),
+func newCourse(name, url string) Course {
+	return Course{
+		ID:   extractCourseID(url),
 		Name: name,
-		Url:  url,
+		URL:  url,
 	}
 }
 
-func extractCourseCode(url string) string {
+func extractCourseID(url string) string {
 	urlParts := strings.Split(url, "/")
 	return urlParts[len(urlParts)-2]
 }
 
-func GetEnrolledCourses(url string, c *colly.Collector) (*[]course, error) {
-	courses := make([]course, 0, 10)
+func GetEnrolledCourses(url string, c *colly.Collector) ([]Course, error) {
+	courses := make([]Course, 0, 10)
 
 	c.OnHTML("#main-content table.table-default tbody tr a",
 		func(h *colly.HTMLElement) {
@@ -40,5 +40,5 @@ func GetEnrolledCourses(url string, c *colly.Collector) (*[]course, error) {
 		return nil, err
 	}
 
-	return &courses, nil
+	return courses, nil
 }

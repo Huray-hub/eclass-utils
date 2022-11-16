@@ -14,13 +14,14 @@ import (
 type Options struct {
 	BaseDomain            string
 	PlainText             bool
+	IgnoreExpired         bool
 	ExportICS             bool
 	IncludedCourses       []string
 	ExcludedCourses       []string
 	IncludedTitleKeywords map[string]string
 }
 
-type Creds struct {
+type Credentials struct {
 	Username string
 	Password string
 }
@@ -37,15 +38,15 @@ func NewOptions(m map[string]any) (*Options, error) {
 	return &opts, nil
 }
 
-func NewCreds(m map[string]any) (*Creds, error) {
-	creds := Creds{}
+func NewCredentials(m map[string]any) (*Credentials, error) {
+	credentials := Credentials{}
 	for k, v := range m {
-		err := SetField(&creds, k, v)
+		err := SetField(&credentials, k, v)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return &creds, nil
+	return &credentials, nil
 }
 
 func SetField(obj any, name string, value any) error {
@@ -111,7 +112,10 @@ func GetOptions() (*Options, error) {
 	}
 
 	if opts.BaseDomain == "" {
-		inputOptsStdin(opts)
+		err := inputOptsStdin(opts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return opts, nil
@@ -119,12 +123,15 @@ func GetOptions() (*Options, error) {
 
 func inputOptsStdin(opts *Options) error {
 	fmt.Print("Domain :")
-	fmt.Scanln(&opts.BaseDomain)
+	_, err := fmt.Scanln(&opts.BaseDomain)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func GetCreds() (*Creds, error) {
+func GetCredentials() (*Credentials, error) {
 	cfgPath, err := configPath()
 	if err != nil {
 		return nil, err
@@ -140,28 +147,34 @@ func GetCreds() (*Creds, error) {
 		return nil, err
 	}
 
-	creds, err := NewCreds(content["creds"])
+	credentials, err := NewCredentials(content["credentials"])
 	if err != nil {
 		return nil, err
 	}
 
-	if creds.Username == "" || creds.Password == "" {
-		inputCredsStdin(creds)
+	if credentials.Username == "" || credentials.Password == "" {
+		err := inputCredentialsStdin(credentials)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return creds, nil
+	return credentials, nil
 }
 
-func inputCredsStdin(creds *Creds) error {
+func inputCredentialsStdin(credentials *Credentials) error {
 	fmt.Print("Username: ")
-	fmt.Scanln(&creds.Username)
-
-	fmt.Print("Password: ")
-	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	_, err := fmt.Scanln(&credentials.Username)
 	if err != nil {
 		return err
 	}
-	creds.Password = string(bytePassword)
+
+	fmt.Print("Password: ")
+	bytePassword, err := term.ReadPassword(syscall.Stdin)
+	if err != nil {
+		return err
+	}
+	credentials.Password = string(bytePassword)
 
 	return nil
 }

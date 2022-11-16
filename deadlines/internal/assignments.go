@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,14 +12,21 @@ import (
 )
 
 type Assignment struct {
-	Course   string
+	ID       string
+	Course   *Course
 	Title    string
 	Deadline time.Time
 	IsSent   bool
 }
 
 func (a *Assignment) String() string {
-	return fmt.Sprintf("%v,%v,%v,%v", a.Course, a.Title, a.Deadline.String(), a.IsSent)
+	return fmt.Sprintf(
+		"%v,%v,%v,%v",
+		a.Course.Name,
+		a.Title,
+		a.Deadline.String(),
+		a.IsSent,
+	)
 }
 
 type sortableSlice []Assignment
@@ -35,22 +43,51 @@ func (p sortableSlice) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
-func newAssignment(tds []*colly.HTMLElement, course string) (*Assignment, error) {
-	dl, err := parseDeadline(tds[1].Text)
+func newAssignment(
+	tds []*colly.HTMLElement,
+	course *Course,
+	location *time.Location,
+) (*Assignment, error) {
+	deadline, err := parseDeadline(tds[1].Text, location)
+	if err != nil {
+		return nil, err
+	}
+	id, err := parseID(tds[0])
 	if err != nil {
 		return nil, err
 	}
 
 	return &Assignment{
+		ID:       id,
 		Course:   course,
 		Title:    tds[0].Text,
-		Deadline: dl,
+		Deadline: deadline,
 		IsSent:   parseIsSent(tds[2]),
 	}, nil
 }
 
-func parseDeadline(dl string) (time.Time, error) {
-	dt, err := time.Parse("02-01-2006 15:04:05", strings.Split(dl, "(")[0])
+func parseID(td *colly.HTMLElement) (string, error) {
+	uri := td.ChildAttr("a", "href")
+	if uri == "" {
+		return "", fmt.Errorf("could not parse assignment's ID from url: %v", uri)
+	}
+
+	id := strings.Split(uri, "id=")[1]
+
+	if _, err := strconv.Atoi(id); err != nil {
+		return "", fmt.Errorf("ID: %v is not a valid string", uri)
+	}
+
+	return id, nil
+}
+
+func parseDeadline(dl string, location *time.Location) (time.Time, error) {
+	// deadline, _ := time.ParseInLocation("02-01-2006 15:04:05", "30-11-2022 23:55:00", location)
+	dt, err := time.ParseInLocation(
+		"02-01-2006 15:04:05",
+		strings.Split(dl, "(")[0],
+		location,
+	)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -62,7 +99,7 @@ func parseIsSent(h *colly.HTMLElement) bool {
 }
 
 func FetchAssignments(
-	url string, courses []course, c *colly.Collector,
+	url string, courses []Course, c *colly.Collector,
 ) ([]Assignment, error) {
 	assignments := make(sortableSlice, 0, len(courses))
 
@@ -84,10 +121,15 @@ func sortAssignments(a sortableSlice) {
 
 func fetchAssignmentsPerCourse(
 	url string,
-	course course,
+	course Course,
 	c *colly.Collector,
 ) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
+
+	location, err := time.LoadLocation("Europe/Athens")
+	if err != nil {
+		return nil, err
+	}
 
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL,
@@ -107,20 +149,21 @@ func fetchAssignmentsPerCourse(
 				tds = append(tds, h2)
 			})
 
-			newAss, err := newAssignment(tds, course.Name)
-			if err != nil {
+			assignment, err2 := newAssignment(tds, &course, location)
+			if err2 != nil {
 				return
 			}
 
-			assignments = append(assignments, *newAss)
-		})
+			assignments = append(assignments, *assignment)
+		},
+	)
 
-	finalUrl, err := prepareCourseUrl(url, course)
+	finalURL, err := prepareCourseURL(url, course)
 	if err != nil {
 		return nil, err
 	}
 
-	err = c.Visit("https://" + finalUrl)
+	err = c.Visit("https://" + finalURL)
 	if err != nil {
 		return nil, err
 	}
@@ -128,15 +171,47 @@ func fetchAssignmentsPerCourse(
 	return assignments, nil
 }
 
-func prepareCourseUrl(baseUrl string, course course) (string, error) {
-	url, err := url.Parse(baseUrl + "/modules/work/")
+func (a Assignment) prepareAssignmentURL(
+	baseURL string,
+) (string, error) {
+	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")
 	if err != nil {
 		return "", err
 	}
 
-	values := url.Query()
-	values.Add("course", course.Code)
-	url.RawQuery = values.Encode()
+	values := finalURL.Query()
+	values.Add("course", a.Course.ID)
+	values.Add("id", a.ID)
+	finalURL.RawQuery = values.Encode()
 
-	return url.String(), nil
+	return finalURL.String(), nil
+}
+
+func prepareCourseURL(baseURL string, course Course) (string, error) {
+	finalURL, err := url.Parse(baseURL + "/modules/work/")
+	if err != nil {
+		return "", err
+	}
+
+	values := finalURL.Query()
+	values.Add("course", course.ID)
+	finalURL.RawQuery = values.Encode()
+
+	return finalURL.String(), nil
+}
+
+func FilterExpiredDeadlines(assignments []Assignment) ([]Assignment, error) {
+	location, err := time.LoadLocation("Europe/Athens")
+	if err != nil {
+		return nil, err
+	}
+	timeNow := time.Now().In(location)
+
+	filteredAssignments := make([]Assignment, 0, len(assignments))
+	for _, assignment := range assignments {
+		if assignment.Deadline.After(timeNow) {
+			filteredAssignments = append(filteredAssignments, assignment)
+		}
+	}
+	return filteredAssignments, nil
 }

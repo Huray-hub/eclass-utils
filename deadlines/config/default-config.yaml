@@ -1,7 +1,8 @@
-creds:
+credentials:
   Username: ''
   Password: ''
 options:
   BaseDomain: ''
   PlainText: false
+  IgnoreExpired: true
   ExportICS: false

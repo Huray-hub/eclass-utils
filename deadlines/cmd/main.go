@@ -18,25 +18,32 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	creds, err := in.GetCreds()
+	credentials, err := in.GetCredentials()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	assignments, err := dl.Deadlines(opts, creds)
+	assignments, err := dl.Deadlines(opts, credentials)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err.Error())
+	}
+
+	if opts.IgnoreExpired {
+		assignments, err = in.FilterExpiredDeadlines(assignments)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 	}
 
 	err = printAssignments(assignments, opts.PlainText)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	if opts.ExportICS {
-		path, err := in.ExportICS(assignments)
+		path, err := in.ExportICS(assignments, opts.BaseDomain)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Fatal(err.Error())
 		}
 
 		fmt.Println("stored in " + path)
@@ -75,7 +82,7 @@ func printAssignmentsPretty(a []in.Assignment) error {
 			isSent = "no"
 		}
 		table.Append([]string{
-			v.Course,
+			v.Course.Name,
 			v.Title,
 			v.Deadline.Format("02/01/2006 15:04") + " " + calcRemainingTime(v),
 			isSent,

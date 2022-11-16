@@ -14,29 +14,29 @@ func headHomepage(url string, c *colly.Collector) error {
 	return nil
 }
 
-func Login(url string, creds Creds, c *colly.Collector) error {
+func Login(url string, credentials Credentials, c *colly.Collector) error {
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
 	})
 
-    err:=headHomepage(url, c)
-    if err != nil {
-        return err
-    }
-    
-	err = postLogin(url, creds, c)
-    if err != nil {
-        return err
-    }
+	err := headHomepage(url, c)
+	if err != nil {
+		return err
+	}
+
+	err = postLogin(url, credentials, c)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func postLogin(url string, creds Creds, c *colly.Collector) error {
+func postLogin(url string, credentials Credentials, c *colly.Collector) error {
 	body := make(map[string]string, 3)
 
-	body["uname"] = creds.Username
-	body["pass"] = creds.Password
+	body["uname"] = credentials.Username
+	body["pass"] = credentials.Password
 	body["submit"] = ""
 
 	err := c.Post("https://"+url, body)

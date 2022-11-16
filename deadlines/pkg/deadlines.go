@@ -7,7 +7,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
+func Deadlines(opts *in.Options, credentials *in.Credentials) ([]in.Assignment, error) {
 	c := colly.NewCollector(
 		colly.AllowedDomains(opts.BaseDomain),
 	)
@@ -17,7 +17,7 @@ func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
 			"failed with response:", r, "\nError:", err)
 	})
 
-	err := in.Login(opts.BaseDomain, *creds, c)
+	err := in.Login(opts.BaseDomain, *credentials, c)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func Deadlines(opts *in.Options, creds *in.Creds) ([]in.Assignment, error) {
 		return nil, err
 	}
 
-	assignments, err := in.FetchAssignments(opts.BaseDomain, *courses, c.Clone())
+	assignments, err := in.FetchAssignments(opts.BaseDomain, courses, c.Clone())
 	if err != nil {
 		return nil, err
 	}

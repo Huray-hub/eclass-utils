@@ -9,8 +9,8 @@ import (
 	ics "github.com/arran4/golang-ical"
 )
 
-func ExportICS(a []Assignment) (string, error) {
-	buffer, err := createCalendar(a)
+func ExportICS(a []Assignment, baseDomain string) (string, error) {
+	buffer, err := createCalendar(a, baseDomain)
 	if err != nil {
 		return "", err
 	}
@@ -33,19 +33,21 @@ func ExportICS(a []Assignment) (string, error) {
 	return path, nil
 }
 
-// TODO: find a way to set calendar title
-func createCalendar(a []Assignment) (*bytes.Buffer, error) {
-	// cal, err := ParseCalendar(strings.NewReader(input))
+func createCalendar(a []Assignment, baseDomain string) (*bytes.Buffer, error) {
 	cal := ics.NewCalendar()
-	cal.SetMethod(ics.MethodRequest)
-	// prop:=cal.CalendarProperties
-	// cal.SetName("Προθεσμίες", ))
-	cal.SetColor("red", nil)
+    cal.SetProductId("eclass-utils")
+    cal.SetCalscale("GREGORIAN")
+	// cal.SetMethod(ics.MethodRefresh)
+	cal.SetName("Προθεσμίες")
+    cal.SetDescription("Calendar for eclass assignments' deadlines")
+	cal.SetColor("red")
 
-	addCalEvent(a[len(a)-1], cal)
-	// for _, v := range a {
-	// 	addCalEvent(v, cal)
-	// }
+	for _, v := range a {
+		err := addEvent(v, cal, baseDomain)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	b := bytes.NewBufferString("")
 	err := cal.SerializeTo(b)
@@ -56,18 +58,22 @@ func createCalendar(a []Assignment) (*bytes.Buffer, error) {
 	return b, nil
 }
 
-func addCalEvent(a Assignment, cal *ics.Calendar) {
-	// event := cal.AddEvent(fmt.Sprintf("id@domain", p.SessionKey.IntID()))
-	event := cal.AddEvent("")
+func addEvent(a Assignment, cal *ics.Calendar, baseDomain string) error {
+	event := cal.AddEvent(fmt.Sprintf("%v-%v-%v", "eclass-utils", a.Course.ID,a.ID))
 	event.SetCreatedTime(time.Now())
 	event.SetDtStampTime(time.Now())
 	event.SetModifiedAt(time.Now())
-	event.SetStartAt(time.Now())
+	event.SetStartAt(a.Deadline)
 	event.SetEndAt(a.Deadline)
-	event.SetSummary(a.Title)
-	// event.SetLocation("Address")
-	// event.SetDescription("Description")
-	// event.SetURL("https://URL/")
-	// event.AddRrule(fmt.Sprintf("FREQ=YEARLY;BYMONTH=%d;BYMONTHDAY=%d", time.Now().Month(), time.Now().Day()))
-	// event.SetOrganizer("sender@domain", ics.WithCN("This Machine"))
+	event.SetSummary(fmt.Sprintf("%v: %v", a.Course.Name, a.Title))
+
+	assignmentURL, err := a.prepareAssignmentURL(baseDomain)
+	if err != nil {
+		return err
+	}
+    assignmentURL="https://" + assignmentURL
+	event.SetDescription(assignmentURL)
+	event.SetURL(assignmentURL)
+
+	return nil
 }
