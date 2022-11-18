@@ -3,26 +3,28 @@ credentials:
   username:
   password:
 options:
-  # Domain of your college 
-  # Example, for the University of West Attica is eclass.uniwa.gr
+  # Sub-domain of your college
+  # Example, for the University of West Attica is 'eclass.uniwa.gr'
   baseDomain:
-  # Toggle true if you want the results to be printed as csv data (for the unix philosophers)
+  # Toggle true if you want the results to be printed in csv format instead 
+  # of a table (for the unix philosophers)
   plainText: false
-  # Ignore the Assignments that have expired
+  # Ignore the expired assignments
   ignoreExpired: true
   # Export to calendar ICS file
   exportICS: false
   # Exclude courses by course code
+  # Can be found at the url of the course' s dashboard
+  # Example: https://eclass.uniwa.gr/modules/work/?course=CS152 <-- CS152
   excludedCourses:
-    # - CS167
+    # - CS152
     # - ICE22
-  # Exclude assignments by course code and keywords to be ignored
+  # Exclude assignments by course code and keywords that will be ignored 
+  # Use it if you observe a specific pattern your professor uses to exclude 
+  # other class' assignments 
   excludedAssignmentsByKeyword:
-    # - courseID: 1
-    #   keywords:
-    #     - Δευτέρας
-    #     - Τρίτης
-    # - courseID: CS282
-    #   keywords:
-    #     - T03
-    #     - T02
+    # CS666: 
+    #   - Δευτέρας
+    #   - Τρίτης
+    # CS152: 
+    #   - ΓΙΑ ΟΣΟΥΣ ΔΕΝ ΕΙΝΑΙ ΓΡΑΜΜΕΝΟΙ ΣΕ ΚΑΠΟΙΟ ΤΜΗΜΑ
