@@ -1,4 +1,4 @@
-package internal
+package assignments
 
 import (
 	"fmt"
@@ -8,12 +8,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Huray-hub/eclass-utils/deadlines/config"
+	"github.com/Huray-hub/eclass-utils/deadlines/courses"
 	"github.com/gocolly/colly"
 )
 
 type Assignment struct {
 	ID       string
-	Course   *Course
+	Course   *courses.Course
 	Title    string
 	Deadline time.Time
 	IsSent   bool
@@ -45,7 +47,7 @@ func (p sortableSlice) Swap(i, j int) {
 
 func newAssignment(
 	tds []*colly.HTMLElement,
-	course *Course,
+	course *courses.Course,
 	location *time.Location,
 ) (*Assignment, error) {
 	deadline, err := parseDeadline(tds[1].Text, location)
@@ -82,7 +84,6 @@ func parseID(td *colly.HTMLElement) (string, error) {
 }
 
 func parseDeadline(dl string, location *time.Location) (time.Time, error) {
-	// deadline, _ := time.ParseInLocation("02-01-2006 15:04:05", "30-11-2022 23:55:00", location)
 	dt, err := time.ParseInLocation(
 		"02-01-2006 15:04:05",
 		strings.Split(dl, "(")[0],
@@ -98,13 +99,22 @@ func parseIsSent(h *colly.HTMLElement) bool {
 	return h.DOM.Children().First().HasClass("fa-check-square-o")
 }
 
-func FetchAssignments(
-	url string, courses []Course, c *colly.Collector,
+func Get(
+	opts *config.Options, courses []courses.Course, c *colly.Collector,
 ) ([]Assignment, error) {
 	assignments := make(sortableSlice, 0, len(courses))
 
 	for _, course := range courses {
-		apc, err := fetchAssignmentsPerCourse(url, course, c.Clone())
+		var filteredOutKeywords []string
+		if val, ok := opts.ExcludedAssignmentsByKeyword[course.ID]; ok {
+			filteredOutKeywords = val
+		}
+		apc, err := fetchAssignmentsPerCourse(
+			opts,
+			filteredOutKeywords,
+			course,
+			c.Clone(),
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -120,8 +130,9 @@ func sortAssignments(a sortableSlice) {
 }
 
 func fetchAssignmentsPerCourse(
-	url string,
-	course Course,
+	opts *config.Options,
+	filteredOutKeywords []string,
+	course courses.Course,
 	c *colly.Collector,
 ) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
@@ -129,6 +140,24 @@ func fetchAssignmentsPerCourse(
 	location, err := time.LoadLocation("Europe/Athens")
 	if err != nil {
 		return nil, err
+	}
+
+	isExcluded := func(assignment *Assignment) bool {
+		if opts.IgnoreExpired && assignment.Deadline.Before(time.Now().In(location)) {
+			return true
+		}
+
+		if filteredOutKeywords == nil {
+			return false
+		}
+
+		for _, v := range filteredOutKeywords {
+			if strings.Contains(assignment.Title, v) {
+				return true
+			}
+		}
+
+		return false
 	}
 
 	c.OnError(func(r *colly.Response, err error) {
@@ -154,11 +183,15 @@ func fetchAssignmentsPerCourse(
 				return
 			}
 
+			if isExcluded(assignment) {
+				return
+			}
+
 			assignments = append(assignments, *assignment)
 		},
 	)
 
-	finalURL, err := prepareCourseURL(url, course)
+	finalURL, err := course.PrepareAssignmentsURL(opts.BaseDomain)
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +204,7 @@ func fetchAssignmentsPerCourse(
 	return assignments, nil
 }
 
-func (a Assignment) prepareAssignmentURL(
+func (a Assignment) PrepareURL(
 	baseURL string,
 ) (string, error) {
 	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")
@@ -185,33 +218,4 @@ func (a Assignment) prepareAssignmentURL(
 	finalURL.RawQuery = values.Encode()
 
 	return finalURL.String(), nil
-}
-
-func prepareCourseURL(baseURL string, course Course) (string, error) {
-	finalURL, err := url.Parse(baseURL + "/modules/work/")
-	if err != nil {
-		return "", err
-	}
-
-	values := finalURL.Query()
-	values.Add("course", course.ID)
-	finalURL.RawQuery = values.Encode()
-
-	return finalURL.String(), nil
-}
-
-func FilterExpiredDeadlines(assignments []Assignment) ([]Assignment, error) {
-	location, err := time.LoadLocation("Europe/Athens")
-	if err != nil {
-		return nil, err
-	}
-	timeNow := time.Now().In(location)
-
-	filteredAssignments := make([]Assignment, 0, len(assignments))
-	for _, assignment := range assignments {
-		if assignment.Deadline.After(timeNow) {
-			filteredAssignments = append(filteredAssignments, assignment)
-		}
-	}
-	return filteredAssignments, nil
 }

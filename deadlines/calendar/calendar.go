@@ -1,4 +1,4 @@
-package internal
+package calendar
 
 import (
 	"bytes"
@@ -6,10 +6,11 @@ import (
 	"os"
 	"time"
 
+	as "github.com/Huray-hub/eclass-utils/deadlines/assignments"
 	ics "github.com/arran4/golang-ical"
 )
 
-func ExportICS(a []Assignment, baseDomain string) (string, error) {
+func Export(a []as.Assignment, baseDomain string) (string, error) {
 	buffer, err := createCalendar(a, baseDomain)
 	if err != nil {
 		return "", err
@@ -33,13 +34,16 @@ func ExportICS(a []Assignment, baseDomain string) (string, error) {
 	return path, nil
 }
 
-func createCalendar(a []Assignment, baseDomain string) (*bytes.Buffer, error) {
+func createCalendar(
+	a []as.Assignment,
+	baseDomain string,
+) (*bytes.Buffer, error) {
 	cal := ics.NewCalendar()
-    cal.SetProductId("eclass-utils")
-    cal.SetCalscale("GREGORIAN")
+	cal.SetProductId("eclass-utils")
+	cal.SetCalscale("GREGORIAN")
 	// cal.SetMethod(ics.MethodRefresh)
 	cal.SetName("Προθεσμίες")
-    cal.SetDescription("Calendar for eclass assignments' deadlines")
+	cal.SetDescription("Calendar for eclass assignments' deadlines")
 	cal.SetColor("red")
 
 	for _, v := range a {
@@ -58,8 +62,8 @@ func createCalendar(a []Assignment, baseDomain string) (*bytes.Buffer, error) {
 	return b, nil
 }
 
-func addEvent(a Assignment, cal *ics.Calendar, baseDomain string) error {
-	event := cal.AddEvent(fmt.Sprintf("%v-%v-%v", "eclass-utils", a.Course.ID,a.ID))
+func addEvent(a as.Assignment, cal *ics.Calendar, baseDomain string) error {
+	event := cal.AddEvent(fmt.Sprintf("%v-%v-%v", "eclass-utils", a.Course.ID, a.ID))
 	event.SetCreatedTime(time.Now())
 	event.SetDtStampTime(time.Now())
 	event.SetModifiedAt(time.Now())
@@ -67,11 +71,11 @@ func addEvent(a Assignment, cal *ics.Calendar, baseDomain string) error {
 	event.SetEndAt(a.Deadline)
 	event.SetSummary(fmt.Sprintf("%v: %v", a.Course.Name, a.Title))
 
-	assignmentURL, err := a.prepareAssignmentURL(baseDomain)
+	assignmentURL, err := a.PrepareURL(baseDomain)
 	if err != nil {
 		return err
 	}
-    assignmentURL="https://" + assignmentURL
+	assignmentURL = "https://" + assignmentURL
 	event.SetDescription(assignmentURL)
 	event.SetURL(assignmentURL)
 

@@ -4,16 +4,18 @@ import (
 	"testing"
 	"time"
 
-	in "github.com/Huray-hub/eclass-utils/deadlines/internal"
+	"github.com/Huray-hub/eclass-utils/deadlines/assignments"
+	"github.com/Huray-hub/eclass-utils/deadlines/calendar"
+	"github.com/Huray-hub/eclass-utils/deadlines/courses"
 )
 
-func TestExportICS(t *testing.T) {
+func TestExport(t *testing.T) {
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
-	course := &in.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
+	course := &courses.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
 	location, _ := time.LoadLocation("Europe/Athens")
 
-	assignments := [2]in.Assignment{
+	assignments := [2]assignments.Assignment{
 		{
 			ID:     "24692",
 			Course: course,
@@ -51,7 +53,7 @@ func TestExportICS(t *testing.T) {
 	}
 
 	// Act
-	res, err := in.ExportICS(assignments[:], baseDomain)
+	res, err := calendar.Export(assignments[:], baseDomain)
 
 	// Assert
 	if err != nil {

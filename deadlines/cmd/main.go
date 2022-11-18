@@ -7,41 +7,31 @@ import (
 	"os"
 	"time"
 
-	in "github.com/Huray-hub/eclass-utils/deadlines/internal"
-	dl "github.com/Huray-hub/eclass-utils/deadlines/pkg"
+	"github.com/Huray-hub/eclass-utils/deadlines/assignments"
+	"github.com/Huray-hub/eclass-utils/deadlines/calendar"
+	"github.com/Huray-hub/eclass-utils/deadlines/config"
+	"github.com/Huray-hub/eclass-utils/deadlines/deadlines"
 	"github.com/olekukonko/tablewriter"
 )
 
 func main() {
-	opts, err := in.GetOptions()
+	opts, creds, err := config.Import()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	credentials, err := in.GetCredentials()
+	a, err := deadlines.Get(opts, creds)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	assignments, err := dl.Deadlines(opts, credentials)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	if opts.IgnoreExpired {
-		assignments, err = in.FilterExpiredDeadlines(assignments)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-	}
-
-	err = printAssignments(assignments, opts.PlainText)
+	err = printAssignments(a, opts.PlainText)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	if opts.ExportICS {
-		path, err := in.ExportICS(assignments, opts.BaseDomain)
+		path, err := calendar.Export(a, opts.BaseDomain)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
@@ -50,7 +40,7 @@ func main() {
 	}
 }
 
-func printAssignments(a []in.Assignment, plainText bool) error {
+func printAssignments(a []assignments.Assignment, plainText bool) error {
 	if plainText {
 		return printAssignmentsPlain(a)
 	}
@@ -58,7 +48,7 @@ func printAssignments(a []in.Assignment, plainText bool) error {
 	return printAssignmentsPretty(a)
 }
 
-func printAssignmentsPlain(a []in.Assignment) error {
+func printAssignmentsPlain(a []assignments.Assignment) error {
 	for _, v := range a {
 		_, err := fmt.Println(v.String())
 		if err != nil {
@@ -69,7 +59,7 @@ func printAssignmentsPlain(a []in.Assignment) error {
 }
 
 // TODO: Fix this ugly code
-func printAssignmentsPretty(a []in.Assignment) error {
+func printAssignmentsPretty(a []assignments.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
 	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΕΧΕΙ ΥΠΟΒΛΗΘΕΙ"})
@@ -93,7 +83,7 @@ func printAssignmentsPretty(a []in.Assignment) error {
 	return nil
 }
 
-func calcRemainingTime(a in.Assignment) string {
+func calcRemainingTime(a assignments.Assignment) string {
 	t := time.Until(a.Deadline)
 
 	switch {

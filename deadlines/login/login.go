@@ -1,8 +1,9 @@
-package internal
+package login
 
 import (
 	"fmt"
 
+	"github.com/Huray-hub/eclass-utils/deadlines/config"
 	"github.com/gocolly/colly"
 )
 
@@ -14,9 +15,16 @@ func headHomepage(url string, c *colly.Collector) error {
 	return nil
 }
 
-func Login(url string, credentials Credentials, c *colly.Collector) error {
+func Login(url string, credentials config.Credentials, c *colly.Collector) error {
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+		fmt.Println(
+			"Request URL:",
+			r.Request.URL,
+			"failed with response:",
+			r,
+			"\nError:",
+			err,
+		)
 	})
 
 	err := headHomepage(url, c)
@@ -32,7 +40,7 @@ func Login(url string, credentials Credentials, c *colly.Collector) error {
 	return nil
 }
 
-func postLogin(url string, credentials Credentials, c *colly.Collector) error {
+func postLogin(url string, credentials config.Credentials, c *colly.Collector) error {
 	body := make(map[string]string, 3)
 
 	body["uname"] = credentials.Username
