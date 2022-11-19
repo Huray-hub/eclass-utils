@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"math"
@@ -12,6 +13,32 @@ import (
 	"github.com/Huray-hub/eclass-utils/assignments/config"
 	"github.com/olekukonko/tablewriter"
 )
+
+func init() {
+	homeCache, err := os.UserCacheDir()
+	if err != nil {
+        log.Fatal(err.Error())
+	}
+
+    path:= homeCache+"/eclass-utils"
+    if _, err2 := os.Stat(path); errors.Is(err2, os.ErrNotExist) {
+		err3 := os.Mkdir(path, os.ModePerm)
+		if err3 != nil {
+			log.Fatal(err3)
+		}
+	}
+
+	file, err := os.OpenFile(
+		path + "/assignments.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
+		0644,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.SetOutput(file)
+}
 
 func main() {
 	opts, creds, err := config.Import()
@@ -35,7 +62,7 @@ func main() {
 			log.Fatal(err.Error())
 		}
 
-		fmt.Println("stored in " + path)
+        fmt.Printf("stored in\n%v", path)
 	}
 }
 
