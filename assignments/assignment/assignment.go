@@ -22,10 +22,12 @@ type Assignment struct {
 
 func (a *Assignment) String() string {
 	return fmt.Sprintf(
-		"%v,%v,%v,%v",
+		"%v,%v,%v,%v,%v,%v",
+		a.Course.ID,
 		a.Course.Name,
+		a.ID,
 		a.Title,
-		a.Deadline.String(),
+		a.Deadline.Format("02/01/2006 15:04"),
 		a.IsSent,
 	)
 }
@@ -61,7 +63,7 @@ func newAssignment(
 	return &Assignment{
 		ID:       id,
 		Course:   course,
-		Title:    tds[0].Text,
+		Title:    strings.TrimSpace(tds[0].Text),
 		Deadline: deadline,
 		IsSent:   parseIsSent(tds[2]),
 	}, nil

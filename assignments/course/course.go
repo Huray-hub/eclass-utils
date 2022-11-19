@@ -14,7 +14,7 @@ type Course struct {
 func newCourse(name, url string) Course {
 	return Course{
 		ID:   extractID(url),
-		Name: name,
+		Name: strings.TrimSpace(name),
 		URL:  url,
 	}
 }

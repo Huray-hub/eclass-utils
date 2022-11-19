@@ -57,18 +57,24 @@ func printAssignmentsPlain(a []assignment.Assignment) error {
 	return nil
 }
 
-// TODO: Fix this ugly code
 func printAssignmentsPretty(a []assignment.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
-	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΕΧΕΙ ΥΠΟΒΛΗΘΕΙ"})
+	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΥΠΟΒΛΗΘΗΚΕ"})
+	appendToTable(a, table)
+	table.Render()
+
+	return nil
+}
+
+func appendToTable(a []assignment.Assignment, table *tablewriter.Table) {
 	for _, v := range a {
 		calcRemainingTime(v)
 		var isSent string
 		if v.IsSent {
-			isSent = "yes"
+			isSent = "Ναι"
 		} else {
-			isSent = "no"
+			isSent = "Όχι"
 		}
 		table.Append([]string{
 			v.Course.Name,
@@ -77,9 +83,6 @@ func printAssignmentsPretty(a []assignment.Assignment) error {
 			isSent,
 		})
 	}
-	table.Render()
-
-	return nil
 }
 
 func calcRemainingTime(a assignment.Assignment) string {

@@ -16,23 +16,17 @@ type Config struct {
 }
 
 type Credentials struct {
-	Username string `yaml:"username"`
+	Username string `yaml:"username,omitempty"`
 	Password string `yaml:"password,omitempty"`
 }
 
 type Options struct {
-	BaseDomain      string   `yaml:"baseDomain,omitempty"`
-	PlainText       bool     `yaml:"plainText"`
-	IgnoreExpired   bool     `yaml:"ignoreExpired"`
-	ExportICS       bool     `yaml:"exportICS"`
-	ExcludedCourses []string `yaml:"excludedCourses,omitempty"`
-
+	BaseDomain                   string              `yaml:"baseDomain,omitempty"`
+	PlainText                    bool                `yaml:"plainText"`
+	IgnoreExpired                bool                `yaml:"ignoreExpired"`
+	ExportICS                    bool                `yaml:"exportICS"`
+	ExcludedCourses              []string            `yaml:"excludedCourses,omitempty"`
 	ExcludedAssignmentsByKeyword map[string][]string `yaml:"excludedAssignmentsByKeyword,omitempty"`
-	// ExcludedAssignmentsByKeyword []struct {
-	//        []
-	// 	CourseID string   `yaml:"courseID"`
-	// 	Keywords []string `yaml:"keywords"`
-	// } `yaml:"excludedAssignmentsByKeyword,omitempty"`
 }
 
 func readYaml(path string) ([]byte, error) {
@@ -85,8 +79,7 @@ func Import() (*Options, *Credentials, error) {
 func extractOptions(config *Config) (*Options, error) {
 	opts := &config.Options
 	if opts.BaseDomain == "" {
-		err := inputStdin(&opts.BaseDomain, "Domain of the university :")
-		// err := inputOptsStdin(opts)
+		err := inputStdin(&opts.BaseDomain, "Domain of the university")
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +90,7 @@ func extractOptions(config *Config) (*Options, error) {
 func extractCredentials(config *Config) (*Credentials, error) {
 	creds := &config.Credentials
 	if creds.Username == "" {
-		err := inputStdin(&creds.Username, "Username :")
+		err := inputStdin(&creds.Username, "Username")
 		if err != nil {
 			return nil, err
 		}
