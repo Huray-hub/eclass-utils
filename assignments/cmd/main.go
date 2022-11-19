@@ -7,10 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/deadlines/assignments"
-	"github.com/Huray-hub/eclass-utils/deadlines/calendar"
-	"github.com/Huray-hub/eclass-utils/deadlines/config"
-	"github.com/Huray-hub/eclass-utils/deadlines/deadlines"
+	"github.com/Huray-hub/eclass-utils/assignments/assignment"
+	"github.com/Huray-hub/eclass-utils/assignments/calendar"
+	"github.com/Huray-hub/eclass-utils/assignments/config"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -20,7 +19,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	a, err := deadlines.Get(opts, creds)
+	a, err := assignment.Get(opts, creds)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -40,7 +39,7 @@ func main() {
 	}
 }
 
-func printAssignments(a []assignments.Assignment, plainText bool) error {
+func printAssignments(a []assignment.Assignment, plainText bool) error {
 	if plainText {
 		return printAssignmentsPlain(a)
 	}
@@ -48,7 +47,7 @@ func printAssignments(a []assignments.Assignment, plainText bool) error {
 	return printAssignmentsPretty(a)
 }
 
-func printAssignmentsPlain(a []assignments.Assignment) error {
+func printAssignmentsPlain(a []assignment.Assignment) error {
 	for _, v := range a {
 		_, err := fmt.Println(v.String())
 		if err != nil {
@@ -59,7 +58,7 @@ func printAssignmentsPlain(a []assignments.Assignment) error {
 }
 
 // TODO: Fix this ugly code
-func printAssignmentsPretty(a []assignments.Assignment) error {
+func printAssignmentsPretty(a []assignment.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
 	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΕΧΕΙ ΥΠΟΒΛΗΘΕΙ"})
@@ -83,7 +82,7 @@ func printAssignmentsPretty(a []assignments.Assignment) error {
 	return nil
 }
 
-func calcRemainingTime(a assignments.Assignment) string {
+func calcRemainingTime(a assignment.Assignment) string {
 	t := time.Until(a.Deadline)
 
 	switch {

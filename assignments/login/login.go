@@ -3,7 +3,7 @@ package login
 import (
 	"fmt"
 
-	"github.com/Huray-hub/eclass-utils/deadlines/config"
+	"github.com/Huray-hub/eclass-utils/assignments/config"
 	"github.com/gocolly/colly"
 )
 

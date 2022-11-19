@@ -108,12 +108,7 @@ func extractCredentials(config *Config) (*Credentials, error) {
 			return nil, err
 		}
 	}
-	// if creds.Username == "" || creds.Password == "" {
-	// 	err := inputCredentialsStdin(creds)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// }
+
 	return creds, nil
 }
 
@@ -136,33 +131,6 @@ func inputPasswordStdin(password *string) error {
 	*password = string(bytePassword)
 	return nil
 }
-
-// func inputOptsStdin(opts *Options) error {
-// 	fmt.Print("Domain :")
-// 	_, err := fmt.Scanln(&opts.BaseDomain)
-// 	if err != nil {
-// 		return err
-// 	}
-//
-// 	return nil
-// }
-//
-// func inputCredentialsStdin(credentials *Credentials) error {
-// 	fmt.Print("Username: ")
-// 	_, err := fmt.Scanln(&credentials.Username)
-// 	if err != nil {
-// 		return err
-// 	}
-//
-// 	fmt.Print("Password: ")
-// 	bytePassword, err := term.ReadPassword(syscall.Stdin)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	credentials.Password = string(bytePassword)
-//
-// 	return nil
-// }
 
 func path() (string, error) {
 	homeConfig, err := os.UserConfigDir()

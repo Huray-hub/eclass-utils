@@ -3,14 +3,14 @@ package config_test
 import (
 	"testing"
 
-	"github.com/Huray-hub/eclass-utils/deadlines/config"
+	"github.com/Huray-hub/eclass-utils/assignments/config"
 )
 
 func TestImport(t *testing.T) {
 	//Arrange
 
 	//Act
-	opts, _,err := config.Import()
+	opts, _, err := config.Import()
 	if err != nil {
 		t.Fatalf("failed")
 	}

@@ -1,4 +1,4 @@
-module github.com/Huray-hub/eclass-utils/deadlines
+module github.com/Huray-hub/eclass-utils/assignments
 
 go 1.19
 

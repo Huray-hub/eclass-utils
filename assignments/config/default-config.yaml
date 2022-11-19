@@ -6,7 +6,7 @@ options:
   # Sub-domain of your college
   # Example, for the University of West Attica is 'eclass.uniwa.gr'
   baseDomain:
-  # Toggle true if you want the results to be printed in csv format instead 
+  # Toggle true if you want the results to be printed in csv format instead
   # of a table (for the unix philosophers)
   plainText: false
   # Ignore the expired assignments
@@ -19,12 +19,12 @@ options:
   excludedCourses:
     # - CS152
     # - ICE22
-  # Exclude assignments by course code and keywords that will be ignored 
-  # Use it if you observe a specific pattern your professor uses to exclude 
-  # other class' assignments 
+  # Exclude assignments by course code and keywords that will be ignored
+  # Use it if you observe a specific pattern your professor uses to exclude
+  # other class' assignments
   excludedAssignmentsByKeyword:
-    # CS666: 
+    # CS666:
     #   - Δευτέρας
     #   - Τρίτης
-    # CS152: 
+    # CS152:
     #   - ΓΙΑ ΟΣΟΥΣ ΔΕΝ ΕΙΝΑΙ ΓΡΑΜΜΕΝΟΙ ΣΕ ΚΑΠΟΙΟ ΤΜΗΜΑ

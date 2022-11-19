@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	as "github.com/Huray-hub/eclass-utils/deadlines/assignments"
+	as "github.com/Huray-hub/eclass-utils/assignments/assignment"
 	ics "github.com/arran4/golang-ical"
 )
 
@@ -41,7 +41,6 @@ func createCalendar(
 	cal := ics.NewCalendar()
 	cal.SetProductId("eclass-utils")
 	cal.SetCalscale("GREGORIAN")
-	// cal.SetMethod(ics.MethodRefresh)
 	cal.SetName("Προθεσμίες")
 	cal.SetDescription("Calendar for eclass assignments' deadlines")
 	cal.SetColor("red")

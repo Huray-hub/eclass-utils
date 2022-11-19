@@ -4,18 +4,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/deadlines/assignments"
-	"github.com/Huray-hub/eclass-utils/deadlines/calendar"
-	"github.com/Huray-hub/eclass-utils/deadlines/courses"
+	"github.com/Huray-hub/eclass-utils/assignments/assignment"
+	"github.com/Huray-hub/eclass-utils/assignments/calendar"
+	crs "github.com/Huray-hub/eclass-utils/assignments/course"
 )
 
 func TestExport(t *testing.T) {
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
-	course := &courses.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
+	course := &crs.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
 	location, _ := time.LoadLocation("Europe/Athens")
 
-	assignments := [2]assignments.Assignment{
+	assignments := [2]assignment.Assignment{
 		{
 			ID:     "24692",
 			Course: course,
