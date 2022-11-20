@@ -12,13 +12,8 @@ func Get(
 	courses := make([]Course, 0, 10)
 
 	isExcluded := func(course Course) bool {
-		if len(opts.ExcludedCourses) == 0 {
-			return false
-		}
-		for _, id := range opts.ExcludedCourses {
-			if id == course.ID {
-				return true
-			}
+		if _, ok := opts.ExcludedCourses[course.ID]; ok {
+			return true
 		}
 		return false
 	}

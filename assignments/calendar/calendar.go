@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	as "github.com/Huray-hub/eclass-utils/assignments/assignment"
@@ -22,9 +23,11 @@ func Export(a []as.Assignment, baseDomain string) (string, error) {
 	}
 
 	t := time.Now()
-	path := fmt.Sprintf(
-		"%v/Documents/assignments_%v%v%v.ics",
-		home, t.Day(), int(t.Month()), t.Year())
+	path := filepath.Join(
+		home,
+		"Documents",
+		fmt.Sprintf("assignments_%v%v%v.cs", t.Day(), int(t.Month()), t.Year()),
+	)
 
 	err = os.WriteFile(path, buffer.Bytes(), 0644)
 	if err != nil {
@@ -42,7 +45,7 @@ func createCalendar(
 	cal.SetProductId("eclass-utils")
 	cal.SetCalscale("GREGORIAN")
 	cal.SetName("Προθεσμίες")
-	cal.SetDescription("Calendar for eclass assignments' deadlines")
+	cal.SetDescription("Calendar for eclass' assignments")
 	cal.SetColor("red")
 
 	for _, v := range a {

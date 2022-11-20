@@ -17,14 +17,14 @@ options:
   # Can be found at the url of the course' s dashboard
   # Example: https://eclass.uniwa.gr/modules/work/?course=CS152 <-- CS152
   excludedCourses:
-    # - CS152
-    # - ICE22
+    # CS179: # Αλγόριθμοι και πολυπλοκότητα
+    # ICE22:
   # Exclude assignments by course code and keywords that will be ignored
   # Use it if you observe a specific pattern your professor uses to exclude
   # other class' assignments
   excludedAssignmentsByKeyword:
-    # CS666:
-    #   - Δευτέρας
-    #   - Τρίτης
+    # ICE262:
+    #   - τμήματα Δευτέρας
+    #   - τμήματα Τετάρτης
     # CS152:
     #   - ΓΙΑ ΟΣΟΥΣ ΔΕΝ ΕΙΝΑΙ ΓΡΑΜΜΕΝΟΙ ΣΕ ΚΑΠΟΙΟ ΤΜΗΜΑ

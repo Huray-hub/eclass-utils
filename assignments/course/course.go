@@ -1,7 +1,9 @@
 package course
 
 import (
+	"fmt"
 	"net/url"
+	"path"
 	"strings"
 )
 
@@ -19,11 +21,16 @@ func newCourse(name, url string) Course {
 	}
 }
 
+func (c *Course) String() string {
+	return fmt.Sprintf("%v,%v,%v", c.ID, c.Name, c.URL)
+}
+
 func (c Course) PrepareAssignmentsURL(baseURL string) (string, error) {
-	finalURL, err := url.Parse(baseURL + "/modules/work/")
+	finalURL, err := url.Parse(baseURL)
 	if err != nil {
 		return "", err
 	}
+    finalURL = finalURL.JoinPath("modules","work")
 
 	values := finalURL.Query()
 	values.Add("course", c.ID)
@@ -33,6 +40,5 @@ func (c Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 }
 
 func extractID(url string) string {
-	urlParts := strings.Split(url, "/")
-	return urlParts[len(urlParts)-2]
+	return path.Base(url)
 }

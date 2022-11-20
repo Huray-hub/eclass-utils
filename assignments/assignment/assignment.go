@@ -71,14 +71,15 @@ func newAssignment(
 
 func parseID(td *colly.HTMLElement) (string, error) {
 	uri := td.ChildAttr("a", "href")
-	if uri == "" {
-		return "", fmt.Errorf("could not parse assignment's ID from url: %v", uri)
+
+	uriValues, err := url.ParseQuery(uri)
+	if err != nil {
+		return "", err
 	}
 
-	id := strings.Split(uri, "id=")[1]
-
+	id := uriValues.Get("id")
 	if _, err := strconv.Atoi(id); err != nil {
-		return "", fmt.Errorf("ID: %v is not a valid string", uri)
+		return "", fmt.Errorf("ID: %v is not a valid string", id)
 	}
 
 	return id, nil
@@ -111,7 +112,7 @@ func (a Assignment) PrepareURL(
 	if err != nil {
 		return "", err
 	}
-
+    
 	values := finalURL.Query()
 	values.Add("course", a.Course.ID)
 	values.Add("id", a.ID)

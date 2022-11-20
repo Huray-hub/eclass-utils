@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/Huray-hub/eclass-utils/assignments/assignment"
@@ -20,7 +21,7 @@ func init() {
         log.Fatal(err.Error())
 	}
 
-    path:= homeCache+"/eclass-utils"
+    path:= filepath.Join(homeCache,"eclass-utils")
     if _, err2 := os.Stat(path); errors.Is(err2, os.ErrNotExist) {
 		err3 := os.Mkdir(path, os.ModePerm)
 		if err3 != nil {
@@ -29,7 +30,7 @@ func init() {
 	}
 
 	file, err := os.OpenFile(
-		path + "/assignments.log",
+		filepath.Join(path,"assignments.log"),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
 		0644,
 	)
@@ -62,7 +63,7 @@ func main() {
 			log.Fatal(err.Error())
 		}
 
-        fmt.Printf("stored in\n%v", path)
+        fmt.Printf("stored in\n%v\n", path)
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"syscall"
 
 	"golang.org/x/term"
@@ -25,26 +26,8 @@ type Options struct {
 	PlainText                    bool                `yaml:"plainText"`
 	IgnoreExpired                bool                `yaml:"ignoreExpired"`
 	ExportICS                    bool                `yaml:"exportICS"`
-	ExcludedCourses              []string            `yaml:"excludedCourses,omitempty"`
+	ExcludedCourses              map[string]struct{} `yaml:"excludedCourses,omitempty"`
 	ExcludedAssignmentsByKeyword map[string][]string `yaml:"excludedAssignmentsByKeyword,omitempty"`
-}
-
-func readYaml(path string) ([]byte, error) {
-	file, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	return file, nil
-}
-
-func decodeYaml(yamlFile []byte) (*Config, error) {
-	var cfg Config
-	err := yaml.Unmarshal(yamlFile, &cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
 }
 
 func Import() (*Options, *Credentials, error) {
@@ -74,6 +57,24 @@ func Import() (*Options, *Credentials, error) {
 	}
 
 	return opts, creds, nil
+}
+
+func readYaml(path string) ([]byte, error) {
+	file, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return file, nil
+}
+
+func decodeYaml(yamlFile []byte) (*Config, error) {
+	var cfg Config
+	err := yaml.Unmarshal(yamlFile, &cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cfg, nil
 }
 
 func extractOptions(config *Config) (*Options, error) {
@@ -131,9 +132,9 @@ func path() (string, error) {
 		return "", err
 	}
 
-	path := homeConfig + "/eclass-utils/config.yaml"
+	path := filepath.Join(homeConfig, "eclass-utils", "config.yaml")
 	if _, err = os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		path = "../config/default-config.yaml"
+		path = filepath.Join("..", "config", "default-config.yaml")
 	}
 
 	return path, nil
