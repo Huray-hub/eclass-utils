@@ -105,7 +105,7 @@ func sortAssignments(a sortable) {
 	sort.Sort(a)
 }
 
-func (a Assignment) PrepareURL(
+func (a* Assignment) PrepareURL(
 	baseURL string,
 ) (string, error) {
 	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")

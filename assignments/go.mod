@@ -3,7 +3,7 @@ module github.com/Huray-hub/eclass-utils/assignments
 go 1.19
 
 require (
-	github.com/arran4/golang-ical v0.0.0-20220517104411-fd89fefb0182
+	github.com/arran4/golang-ical v0.0.0-20221118224027-a67735377457
 	github.com/gocolly/colly v1.2.0
 	golang.org/x/term v0.2.0
 	gopkg.in/yaml.v3 v3.0.1

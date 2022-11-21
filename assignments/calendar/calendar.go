@@ -17,15 +17,14 @@ func Export(a []as.Assignment, baseDomain string) (string, error) {
 		return "", err
 	}
 
-	home, err := os.UserHomeDir()
+	workingDirectory, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
 
 	t := time.Now()
 	path := filepath.Join(
-		home,
-		"Documents",
+        workingDirectory,
 		fmt.Sprintf("assignments_%v%v%v.cs", t.Day(), int(t.Month()), t.Year()),
 	)
 
@@ -78,6 +77,7 @@ func addEvent(a as.Assignment, cal *ics.Calendar, baseDomain string) error {
 		return err
 	}
 	assignmentURL = "https://" + assignmentURL
+
 	event.SetDescription(assignmentURL)
 	event.SetURL(assignmentURL)
 

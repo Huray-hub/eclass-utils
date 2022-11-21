@@ -25,12 +25,12 @@ func (c *Course) String() string {
 	return fmt.Sprintf("%v,%v,%v", c.ID, c.Name, c.URL)
 }
 
-func (c Course) PrepareAssignmentsURL(baseURL string) (string, error) {
+func (c *Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 	finalURL, err := url.Parse(baseURL)
 	if err != nil {
 		return "", err
 	}
-    finalURL = finalURL.JoinPath("modules","work")
+	finalURL = finalURL.JoinPath("modules", "work")
 
 	values := finalURL.Query()
 	values.Add("course", c.ID)

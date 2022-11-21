@@ -2,6 +2,7 @@ package assignment
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -10,6 +11,16 @@ import (
 	"github.com/Huray-hub/eclass-utils/assignments/login"
 	"github.com/gocolly/colly"
 )
+
+var location *time.Location
+
+func init() {
+	var err error
+	location, err = time.LoadLocation("Europe/Athens")
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+}
 
 func Get(
 	opts *config.Options,
@@ -47,15 +58,15 @@ func getAssignments(
 ) ([]Assignment, error) {
 	assignments := make(sortable, 0, len(courses))
 
-	for _, course := range courses {
-		var filteredOutKeywords []string
-		if val, ok := opts.ExcludedAssignmentsByKeyword[course.ID]; ok {
-			filteredOutKeywords = val
+	for _, crs := range courses {
+		var excludedStrings []string
+		if val, ok := opts.ExcludedAssignments[crs.ID]; ok {
+			excludedStrings = val
 		}
 		apc, err := getAssignmentsPerCourse(
 			opts,
-			filteredOutKeywords,
-			course,
+			excludedStrings,
+			crs,
 			c.Clone(),
 		)
 		if err != nil {
@@ -70,27 +81,22 @@ func getAssignments(
 
 func getAssignmentsPerCourse(
 	opts *config.Options,
-	filteredOutKeywords []string,
+	excludedStrings []string,
 	course course.Course,
 	c *colly.Collector,
 ) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
-
-	location, err := time.LoadLocation("Europe/Athens")
-	if err != nil {
-		return nil, err
-	}
 
 	isExcluded := func(assignment *Assignment) bool {
 		if opts.IgnoreExpired && assignment.Deadline.Before(time.Now().In(location)) {
 			return true
 		}
 
-		if filteredOutKeywords == nil {
+		if excludedStrings == nil {
 			return false
 		}
 
-		for _, v := range filteredOutKeywords {
+		for _, v := range excludedStrings {
 			if strings.Contains(assignment.Title, v) {
 				return true
 			}
@@ -102,7 +108,7 @@ func getAssignmentsPerCourse(
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL,
 			"failed with response:", r, "\nError:", err)
-		// log.Fatal(err.Error())
+		log.Fatal(err.Error())
 	})
 
 	c.OnHTML(
@@ -117,8 +123,8 @@ func getAssignmentsPerCourse(
 				tds = append(tds, h2)
 			})
 
-			assignment, err2 := newAssignment(tds, &course, location)
-			if err2 != nil {
+			assignment, err := newAssignment(tds, &course, location)
+			if err != nil {
 				return
 			}
 
