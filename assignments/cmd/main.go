@@ -22,7 +22,7 @@ func init() {
 
 	path := filepath.Join(homeCache, "eclass-utils")
 	if _, err = os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		err = os.MkdirAll(path, os.ModePerm)
+		err = os.MkdirAll(path, 0755)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -31,7 +31,7 @@ func init() {
 	file, err := os.OpenFile(
 		filepath.Join(path, "assignments.log"),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
-		0755,
+		0644,
 	)
 	if err != nil {
 		log.Fatal(err)
