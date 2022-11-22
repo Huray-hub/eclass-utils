@@ -92,7 +92,10 @@ func Ensure(opts *Options, creds *Credentials) error {
 			cfg.Credentials = *newDefaultCredentials()
 		}
 
-		createConfig(path, cfg)
+		err = createConfig(path, cfg)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

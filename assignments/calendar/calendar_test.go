@@ -14,7 +14,10 @@ func TestExport(t *testing.T) {
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
 	course := &crs.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
-	location, _ := time.LoadLocation("Europe/Athens")
+	location, err := time.LoadLocation("Europe/Athens")
+    if err != nil {
+        t.Fatal(err.Error())
+    }
 
 	assignments := [2]assignment.Assignment{
 		{
