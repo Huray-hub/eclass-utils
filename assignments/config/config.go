@@ -191,7 +191,7 @@ func inputStdin(value *string, message string) error {
 
 func inputPasswordStdin(password *string) error {
 	fmt.Print("Password: ")
-	bytePassword, err := term.ReadPassword(syscall.Stdin)
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return err
 	}

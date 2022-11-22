@@ -7,6 +7,7 @@ import (
 )
 
 func TestImport(t *testing.T) {
+	t.Skip("currently I use this only as a shorcut to my workflow")
 	//Arrange
 
 	//Act

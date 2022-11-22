@@ -10,6 +10,7 @@ import (
 )
 
 func TestExport(t *testing.T) {
+	t.Skip("currently I use this only as a shorcut to my workflow")
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
 	course := &crs.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
