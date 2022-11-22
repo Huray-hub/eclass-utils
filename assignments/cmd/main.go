@@ -31,7 +31,7 @@ func init() {
 	file, err := os.OpenFile(
 		filepath.Join(path, "assignments.log"),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
-		0644,
+		0755,
 	)
 	if err != nil {
 		log.Fatal(err)

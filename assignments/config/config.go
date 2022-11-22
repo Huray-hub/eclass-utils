@@ -218,7 +218,10 @@ func path() (string, error) {
 }
 
 func createConfig(configPath string, config *Config) error {
-	os.MkdirAll(filepath.Dir(configPath), 0755)
+	err := os.MkdirAll(filepath.Dir(configPath), 0755)
+	if err != nil {
+		return err
+	}
 
 	yamlFile, err := yaml.Marshal(config)
 	if err != nil {
