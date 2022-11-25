@@ -15,16 +15,17 @@ func TestExport(t *testing.T) {
 	baseDomain := "eclass.uniwa.gr"
 	course := &crs.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
 	location, err := time.LoadLocation("Europe/Athens")
-    if err != nil {
-        t.Fatal(err.Error())
-    }
+	if err != nil {
+		t.Fatal(err.Error())
+	}
 
 	assignments := [2]assignment.Assignment{
 		{
 			ID:     "24692",
 			Course: course,
 			Deadline: func(location *time.Location) time.Time {
-				deadline, err := time.ParseInLocation(
+				var deadline time.Time
+				deadline, err = time.ParseInLocation(
 					"02-01-2006 15:04:05",
 					"30-11-2022 23:55:00",
 					location,
@@ -41,7 +42,8 @@ func TestExport(t *testing.T) {
 			ID:     "15207",
 			Course: course,
 			Deadline: func(location *time.Location) time.Time {
-				deadline, err := time.ParseInLocation(
+				var deadline time.Time
+				deadline, err = time.ParseInLocation(
 					"02-01-2006 15:04:05",
 					"28-11-2022 23:55:00",
 					location,

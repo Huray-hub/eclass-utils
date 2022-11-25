@@ -71,9 +71,8 @@ func parseExcludedCourses(raw string) map[string]struct{} {
 
 	res := make(map[string]struct{}, len(excludedCourses))
 
-	var empty struct{}
 	for _, v := range excludedCourses {
-		res[strings.TrimSpace(v)] = empty
+		res[strings.TrimSpace(v)] = struct{}{}
 	}
 	return res
 }
