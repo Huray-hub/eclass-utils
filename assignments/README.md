@@ -27,7 +27,7 @@ are the following options for convenience:
 
 ## Installation Options
 
-1. TODO: See releases for pre-built binaries.
+1. See releases for pre-built binaries.
 2. TODO: Build from source requires [Go](https://go.dev).
 3. TODO: Package managers
 
@@ -55,4 +55,4 @@ TODO
 
 
 ## Disclaimers
-If you choose to cache college credentials during the installation, please make sure to not read access to the config file. Currently, they are be stored. There was not much time to deal with OS secret API storages. In the future, probably will either store the credentials encrypted to the file or provide support for the secret storage. 
+If you choose to cache college credentials during the installation, please make sure to not give read access to the config file. Currently, creds are be stored there. There was not much time to deal with OS secret API storages. In the future, probably will either store the credentials encrypted to the file or provide support for the secret storage. 
