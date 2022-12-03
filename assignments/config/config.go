@@ -119,7 +119,7 @@ func isValidDomain(baseDomain string) bool {
 		return false
 	}
 	client := http.Client{
-		Timeout: 5 * time.Second,
+		Timeout: 10 * time.Second,
 	}
 	resp, err := client.Head("https://" + baseDomain)
 	if err != nil {

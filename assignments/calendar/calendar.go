@@ -24,8 +24,8 @@ func Export(a []as.Assignment, baseDomain string) (string, error) {
 
 	t := time.Now()
 	path := filepath.Join(
-        workingDirectory,
-		fmt.Sprintf("assignments_%v%v%v.cs", t.Day(), int(t.Month()), t.Year()),
+		workingDirectory,
+		fmt.Sprintf("assignments_%v%v%v.ics", t.Day(), int(t.Month()), t.Year()),
 	)
 
 	err = os.WriteFile(path, buffer.Bytes(), 0644)

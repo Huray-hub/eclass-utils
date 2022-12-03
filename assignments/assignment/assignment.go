@@ -86,15 +86,11 @@ func parseID(td *colly.HTMLElement) (string, error) {
 }
 
 func parseDeadline(dl string, location *time.Location) (time.Time, error) {
-	dt, err := time.ParseInLocation(
-		"02-01-2006 15:04:05",
-		strings.Split(dl, "(")[0],
-		location,
-	)
-	if err != nil {
-		return time.Time{}, err
-	}
-	return dt, nil
+    t, err := parseTime(dl, location)
+    if err != nil {
+        return time.Time{}, err
+    }
+	return *t, nil
 }
 
 func parseIsSent(h *colly.HTMLElement) bool {
@@ -105,14 +101,14 @@ func sortAssignments(a sortable) {
 	sort.Sort(a)
 }
 
-func (a* Assignment) PrepareURL(
+func (a *Assignment) PrepareURL(
 	baseURL string,
 ) (string, error) {
 	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")
 	if err != nil {
 		return "", err
 	}
-    
+
 	values := finalURL.Query()
 	values.Add("course", a.Course.ID)
 	values.Add("id", a.ID)

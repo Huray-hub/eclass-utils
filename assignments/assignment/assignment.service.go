@@ -12,7 +12,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-var location *time.Location
+var location *time.Location 
 
 func init() {
 	var err error
