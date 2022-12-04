@@ -32,6 +32,14 @@ func printAssignmentsPretty(a []assignment.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
 	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΥΠΟΒΛΗΘΗΚΕ"})
+	table.SetColumnAlignment(
+		[]int{
+			tablewriter.ALIGN_DEFAULT,
+			tablewriter.ALIGN_DEFAULT,
+			tablewriter.ALIGN_DEFAULT,
+			tablewriter.ALIGN_CENTER,
+		},
+	)
 	appendToTable(a, table)
 	table.Render()
 
@@ -43,9 +51,9 @@ func appendToTable(a []assignment.Assignment, table *tablewriter.Table) {
 		remainingTime(v)
 		var isSent string
 		if v.IsSent {
-			isSent = "Ναι"
+			isSent = "✓"
 		} else {
-			isSent = "Όχι"
+			isSent = "✗"
 		}
 		table.Append([]string{
 			v.Course.Name,

@@ -86,10 +86,10 @@ func parseID(td *colly.HTMLElement) (string, error) {
 }
 
 func parseDeadline(dl string, location *time.Location) (time.Time, error) {
-    t, err := parseTime(dl, location)
-    if err != nil {
-        return time.Time{}, err
-    }
+	t, err := parseTime(dl, location)
+	if err != nil {
+		return time.Time{}, err
+	}
 	return *t, nil
 }
 

@@ -76,9 +76,12 @@ func addEvent(a as.Assignment, cal *ics.Calendar, baseDomain string) error {
 	if err != nil {
 		return err
 	}
-	assignmentURL = "https://" + assignmentURL
+	description := "https://" + assignmentURL
 
-	event.SetDescription(assignmentURL)
+	if a.IsSent {
+		description = description + "\n" + "Έχει σταλεί"
+	}
+	event.SetDescription(description)
 	event.SetURL(assignmentURL)
 
 	return nil
