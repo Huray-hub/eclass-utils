@@ -38,7 +38,8 @@ var periodsGR = map[string]string{
 }
 
 func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
-	if strings.Contains(dateRaw, "αύριο") || strings.Contains(dateRaw, "μεθαύριο") {
+	if strings.Contains(dateRaw, "αύριο") || strings.Contains(dateRaw, "μεθαύριο") ||
+		strings.Contains(dateRaw, "σήμερα") {
 		return parseNearTime(dateRaw, location)
 	}
 
