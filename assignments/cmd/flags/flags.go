@@ -15,10 +15,10 @@ func Read(opts *config.Options, creds *config.Credentials) {
 		"Print results in plain csv format",
 	)
 	flag.BoolVar(
-		&opts.IgnoreExpired,
+		&opts.IncludeExpired,
 		"i",
-		opts.IgnoreExpired,
-		"Ignore expired assignments",
+		opts.IncludeExpired,
+		"Include expired assignments",
 	)
 	flag.BoolVar(&opts.ExportICS, "c", opts.ExportICS, "Export calendar file")
 	baseDomain := flag.String(

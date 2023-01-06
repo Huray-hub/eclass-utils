@@ -9,8 +9,8 @@ options:
   # Toggle true if you want the results to be printed in csv format instead
   # of a table (for the unix philosophers)
   plainText: false
-  # Ignore the expired assignments
-  ignoreExpired: true
+  # Include expired assignments
+  includeExpired: false
   # Export to calendar ICS file
   exportICS: false
   # Exclude courses by course code

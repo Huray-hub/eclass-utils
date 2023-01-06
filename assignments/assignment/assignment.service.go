@@ -88,7 +88,7 @@ func getAssignmentsPerCourse(
 	assignments := make([]Assignment, 0, 10)
 
 	isExcluded := func(assignment *Assignment) bool {
-		if opts.IgnoreExpired && assignment.Deadline.Before(time.Now().In(location)) {
+		if !opts.IncludeExpired && assignment.Deadline.Before(time.Now().In(location)) {
 			return true
 		}
 

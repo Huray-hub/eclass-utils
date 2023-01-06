@@ -7,8 +7,8 @@ Assignments is a utility that will allow you seamlessly be up-to-date with the s
 Prints the assignments of your enrolled courses to the terminal (stdin). There
 are the following options for convenience:
 
-- **Ignorance of expired assignments**: usually there are expired assignments from previous years.
-(default = true)
+- **Inclusion of expired assignments**: usually there are expired assignments from previous years.
+(default = false)
 
 - **Exclusion of selected courses**: there are courses that do not have assignments.
 (default = empty)
@@ -22,7 +22,7 @@ are the following options for convenience:
 - **Plain text**: The output will be printed in csv format instead of a table.
 (default = false)
 
-- **Manual add assignments**: Some 'rebel' professors enjoy making our lives more difficult by putting the assignments on other sections/platforms or nowhere at all.
+- **Manual add assignments**: Some 'rebel' professors put the assignments on other sections/platforms or nowhere at all. (TODO)
 (default = empty)
 
 ## Installation Options

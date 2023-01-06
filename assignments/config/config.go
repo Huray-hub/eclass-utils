@@ -27,7 +27,7 @@ type Credentials struct {
 type Options struct {
 	BaseDomain          string              `yaml:"baseDomain"`
 	PlainText           bool                `yaml:"plainText"`
-	IgnoreExpired       bool                `yaml:"ignoreExpired"`
+	IncludeExpired      bool                `yaml:"includeExpired"`
 	ExportICS           bool                `yaml:"exportICS"`
 	ExcludedCourses     map[string]struct{} `yaml:"excludedCourses"`
 	ExcludedAssignments map[string][]string `yaml:"excludedAssignments"`
@@ -245,7 +245,7 @@ func newDefault() *Config {
 		Options: Options{
 			BaseDomain:          "",
 			PlainText:           false,
-			IgnoreExpired:       true,
+			IncludeExpired:      false,
 			ExportICS:           false,
 			ExcludedCourses:     map[string]struct{}{},
 			ExcludedAssignments: map[string][]string{},
