@@ -22,7 +22,7 @@ are the following options for convenience:
 - **Plain text**: The output will be printed in csv format instead of a table.
 (default = false)
 
-- **Manual add assignments**: Some 'rebel' professors put the assignments on other sections/platforms or nowhere at all. (TODO)
+- **Manual add assignments**: Some professors put the assignments on other sections/platforms or nowhere at all. (TODO)
 (default = empty)
 
 ## Installation Options
