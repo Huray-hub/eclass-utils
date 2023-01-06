@@ -70,9 +70,9 @@ func remainingTime(a assignment.Assignment) string {
 	switch {
 	case t < 0:
 		return "(Έληξε)"
-	case t.Hours()/24 > 0:
+	case t.Hours()/24 >= 1:
 		return "(" + fmt.Sprint(math.Floor(t.Hours()/24)) + " μέρες)"
-	case t.Minutes()/60 > 0:
+	case t.Minutes()/60 >= 1:
 		return "(" + fmt.Sprint(math.Floor(t.Hours())) + " ώρες)"
 	default:
 		return "(" + fmt.Sprint(math.Floor(t.Minutes())) + " λεπτά)"

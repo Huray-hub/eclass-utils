@@ -38,9 +38,18 @@ var periodsGR = map[string]string{
 }
 
 func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
-	if strings.Contains(dateRaw, "αύριο") || strings.Contains(dateRaw, "μεθαύριο") ||
-		strings.Contains(dateRaw, "σήμερα") {
-		return parseNearTime(dateRaw, location)
+	var timePrepositions = map[string]int{
+		"προχθές":  -2,
+		"χθες":     -1,
+		"σήμερα":   0,
+		"αύριο":    1,
+		"μεθαύριο": 2,
+	}
+
+	for k, v := range timePrepositions {
+		if strings.Contains(dateRaw, k) {
+			return parseNearTime(dateRaw, v, location)
+		}
 	}
 
 	return parseNormalDate(dateRaw, location)
@@ -49,8 +58,12 @@ func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
 // parseNearTime parses the following formats:
 // "αύριο - 11:59 μ.μ.(απομένουν 1 ημέρα 3 ώρες 8 λεπτά)"
 // "μεθαύριο - 11:59 μ.μ.(απομένουν 2 ημέρες 3 λώρες 8 λεπτά)"
-func parseNearTime(nearDate string, location *time.Location) (*time.Time, error) {
-	dateOnly, err := parseNearDateOnly(nearDate)
+func parseNearTime(
+	nearDate string,
+	days int,
+	location *time.Location,
+) (*time.Time, error) {
+	dateOnly, err := parseNearDateOnly(days)
 	if err != nil {
 		return nil, err
 	}
@@ -74,17 +87,8 @@ func parseNearTime(nearDate string, location *time.Location) (*time.Time, error)
 	return &fullTime, nil
 }
 
-func parseNearDateOnly(date string) (*time.Time, error) {
-	dateOnly := time.Now()
-
-	switch {
-	case strings.Contains(date, "αύριο"):
-		dateOnly = dateOnly.AddDate(0, 0, 1)
-	case strings.Contains(date, "μεθαύριο"):
-		dateOnly = dateOnly.AddDate(0, 0, 2)
-	default:
-		return nil, errors.New("invalid value")
-	}
+func parseNearDateOnly(days int) (*time.Time, error) {
+	dateOnly := time.Now().AddDate(0, 0, days)
 
 	return &dateOnly, nil
 }
