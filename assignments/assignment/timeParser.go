@@ -46,10 +46,10 @@ func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
 		"μεθαύριο": 2,
 	}
 
-	for k, v := range timePrepositions {
-		if strings.Contains(dateRaw, k) {
-			return parseNearTime(dateRaw, v, location)
-		}
+	firstWord := strings.Split(dateRaw, " ")[0]
+
+	if v, ok := timePrepositions[firstWord]; ok {
+		return parseNearTime(dateRaw, v, location)
 	}
 
 	return parseNormalDate(dateRaw, location)
