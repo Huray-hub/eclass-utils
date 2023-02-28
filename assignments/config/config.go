@@ -55,6 +55,32 @@ func Import() (*Options, *Credentials, error) {
 	return &config.Options, &config.Credentials, nil
 }
 
+// Export takes some options and credentials and writes them
+// to the config.yaml file.
+func Export(opts Options, creds Credentials,) error {
+	configPath, err := path()
+	if err != nil {
+		return err
+	}
+
+    config := Config{
+        Credentials: creds,
+        Options: opts,
+    }
+
+	yamlFile, err := yaml.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(configPath, yamlFile, 0644)
+	if err != nil {
+		return err
+	}
+
+    return nil
+}
+
 func decodeYaml(yamlFile []byte) (*Config, error) {
 	var cfg Config
 	err := yaml.Unmarshal(yamlFile, &cfg)
