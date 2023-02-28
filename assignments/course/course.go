@@ -21,11 +21,11 @@ func newCourse(name, url string) Course {
 	}
 }
 
-func (c *Course) String() string {
-	return fmt.Sprintf("%v,%v,%v", c.ID, c.Name, c.URL)
+func (crs Course) String() string {
+	return fmt.Sprintf("%v,%v,%v", crs.ID, crs.Name, crs.URL)
 }
 
-func (c *Course) PrepareAssignmentsURL(baseURL string) (string, error) {
+func (crs Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 	finalURL, err := url.Parse(baseURL)
 	if err != nil {
 		return "", err
@@ -33,7 +33,7 @@ func (c *Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 	finalURL = finalURL.JoinPath("modules", "work")
 
 	values := finalURL.Query()
-	values.Add("course", c.ID)
+	values.Add("course", crs.ID)
 	finalURL.RawQuery = values.Encode()
 
 	return finalURL.String(), nil

@@ -5,10 +5,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func Get(
-	opts *config.Options,
-	c *colly.Collector,
-) ([]Course, error) {
+func Get(opts *config.Options, c *colly.Collector) ([]Course, error) {
 	courses := make([]Course, 0, 10)
 
 	isExcluded := func(course Course) bool {

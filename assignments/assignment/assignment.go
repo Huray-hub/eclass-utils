@@ -50,17 +50,17 @@ func newAssignment(
 	tds []*colly.HTMLElement,
 	course *course.Course,
 	location *time.Location,
-) (*Assignment, error) {
+) (Assignment, error) {
 	deadline, err := parseDeadline(tds[1].Text, location)
 	if err != nil {
-		return nil, err
+		return Assignment{}, err
 	}
 	id, err := parseID(tds[0])
 	if err != nil {
-		return nil, err
+		return Assignment{}, err
 	}
 
-	return &Assignment{
+	return Assignment{
 		ID:       id,
 		Course:   course,
 		Title:    strings.TrimSpace(tds[0].Text),

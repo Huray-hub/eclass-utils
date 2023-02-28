@@ -12,7 +12,7 @@ import (
 	"github.com/gocolly/colly"
 )
 
-var location *time.Location 
+var location *time.Location
 
 func init() {
 	var err error
@@ -22,10 +22,7 @@ func init() {
 	}
 }
 
-func Get(
-	opts *config.Options,
-	credentials *config.Credentials,
-) ([]Assignment, error) {
+func Get(opts *config.Options, creds *config.Credentials) ([]Assignment, error) {
 	c := colly.NewCollector(
 		colly.AllowedDomains(opts.BaseDomain),
 	)
@@ -35,7 +32,7 @@ func Get(
 			"failed with response:", r, "\nError:", err)
 	})
 
-	err := login.Login(opts.BaseDomain, *credentials, c)
+	err := login.Login(opts.BaseDomain, *creds, c)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +84,8 @@ func getAssignmentsPerCourse(
 ) ([]Assignment, error) {
 	assignments := make([]Assignment, 0, 10)
 
-	isExcluded := func(assignment *Assignment) bool {
-		if !opts.IncludeExpired && assignment.Deadline.Before(time.Now().In(location)) {
+	isExcluded := func(a Assignment) bool {
+		if !opts.IncludeExpired && a.Deadline.Before(time.Now().In(location)) {
 			return true
 		}
 
@@ -97,7 +94,7 @@ func getAssignmentsPerCourse(
 		}
 
 		for _, v := range excludedStrings {
-			if strings.Contains(assignment.Title, v) {
+			if strings.Contains(a.Title, v) {
 				return true
 			}
 		}
@@ -132,7 +129,7 @@ func getAssignmentsPerCourse(
 				return
 			}
 
-			assignments = append(assignments, *assignment)
+			assignments = append(assignments, assignment)
 		},
 	)
 

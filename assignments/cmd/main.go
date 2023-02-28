@@ -58,18 +58,18 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	a, err := assignment.Get(opts, creds)
+	assignments, err := assignment.Get(opts, creds)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	err = output.PrintAssignments(a, opts.PlainText)
+	err = output.PrintAssignments(assignments, opts.PlainText)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	if opts.ExportICS {
-		path, err := calendar.Export(a, opts.BaseDomain)
+		path, err := calendar.Export(assignments, opts.BaseDomain)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

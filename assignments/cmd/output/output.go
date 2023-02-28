@@ -10,17 +10,17 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func PrintAssignments(a []assignment.Assignment, plainText bool) error {
+func PrintAssignments(assignments []assignment.Assignment, plainText bool) error {
 	if plainText {
-		return printAssignmentsPlain(a)
+		return printAssignmentsPlain(assignments)
 	}
 
-	return printAssignmentsPretty(a)
+	return printAssignmentsPretty(assignments)
 }
 
-func printAssignmentsPlain(a []assignment.Assignment) error {
-	for _, v := range a {
-		_, err := fmt.Println(v.String())
+func printAssignmentsPlain(assignments []assignment.Assignment) error {
+	for _, a := range assignments {
+		_, err := fmt.Println(a.String())
 		if err != nil {
 			return err
 		}
@@ -28,7 +28,7 @@ func printAssignmentsPlain(a []assignment.Assignment) error {
 	return nil
 }
 
-func printAssignmentsPretty(a []assignment.Assignment) error {
+func printAssignmentsPretty(assignments []assignment.Assignment) error {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetRowLine(true)
 	table.SetHeader([]string{"ΜΑΘΗΜΑ", "ΕΡΓΑΣΙΑ", "ΠΡΟΘΕΣΜΙΑ", "ΥΠΟΒΛΗΘΗΚΕ"})
@@ -40,32 +40,32 @@ func printAssignmentsPretty(a []assignment.Assignment) error {
 			tablewriter.ALIGN_CENTER,
 		},
 	)
-	appendToTable(a, table)
+	appendToTable(assignments, table)
 	table.Render()
 
 	return nil
 }
 
-func appendToTable(a []assignment.Assignment, table *tablewriter.Table) {
-	for _, v := range a {
-		remainingTime(v)
+func appendToTable(assignments []assignment.Assignment, table *tablewriter.Table) {
+	for _, asgmt := range assignments {
+		remainingTime(asgmt)
 		var isSent string
-		if v.IsSent {
+		if asgmt.IsSent {
 			isSent = "✓"
 		} else {
 			isSent = "✗"
 		}
 		table.Append([]string{
-			v.Course.Name,
-			v.Title,
-			v.Deadline.Format("02/01/2006 15:04") + " " + remainingTime(v),
+			asgmt.Course.Name,
+			asgmt.Title,
+			asgmt.Deadline.Format("02/01/2006 15:04") + " " + remainingTime(asgmt),
 			isSent,
 		})
 	}
 }
 
-func remainingTime(a assignment.Assignment) string {
-	t := time.Until(a.Deadline)
+func remainingTime(assignment assignment.Assignment) string {
+	t := time.Until(assignment.Deadline)
 
 	switch {
 	case t < 0:
