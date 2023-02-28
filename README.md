@@ -2,10 +2,10 @@
 
 E-class utils is a set of tools for accessing various data from the Greek government's e-class platform from the terminal, in a friendly manner.
 
-## Features
+## Modules
+
 ### Assignments
-Fetches all the assignments from the enrolled courses, sorted by deadlines.
+Fetches all the assignments from the enrolled courses, sorted by deadline.
 
-### Professors' contact information (later)
-Fetch professors' mobile phone and email
-
+### Authentication
+Provides authentication session for Greek government's e-class platform
