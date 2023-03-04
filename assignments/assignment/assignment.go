@@ -8,8 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/course"
-	"github.com/gocolly/colly"
+	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/course"
+	"github.com/PuerkitoBio/goquery"
+	"github.com/pkg/errors"
 )
 
 type Assignment struct {
@@ -32,26 +34,12 @@ func (a *Assignment) String() string {
 	)
 }
 
-type sortable []Assignment
-
-func (a sortable) Len() int {
-	return len(a)
-}
-
-func (a sortable) Less(i, j int) bool {
-	return a[i].Deadline.Before(a[j].Deadline)
-}
-
-func (a sortable) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
 func newAssignment(
-	tds []*colly.HTMLElement,
+	tds []*goquery.Selection,
 	course *course.Course,
 	location *time.Location,
 ) (Assignment, error) {
-	deadline, err := parseDeadline(tds[1].Text, location)
+	deadline, err := parseDeadline(tds[1].Text(), location)
 	if err != nil {
 		return Assignment{}, err
 	}
@@ -63,14 +51,17 @@ func newAssignment(
 	return Assignment{
 		ID:       id,
 		Course:   course,
-		Title:    strings.TrimSpace(tds[0].Text),
+		Title:    strings.TrimSpace(tds[0].Text()),
 		Deadline: deadline,
 		IsSent:   parseIsSent(tds[2]),
 	}, nil
 }
 
-func parseID(td *colly.HTMLElement) (string, error) {
-	uri := td.ChildAttr("a", "href")
+func parseID(td *goquery.Selection) (string, error) {
+	uri, ok := td.Find("a").Attr("href")
+	if !ok {
+		return "", errors.New("could not parse ID from 'a href'")
+	}
 
 	uriValues, err := url.ParseQuery(uri)
 	if err != nil {
@@ -79,7 +70,7 @@ func parseID(td *colly.HTMLElement) (string, error) {
 
 	id := uriValues.Get("id")
 	if _, err := strconv.Atoi(id); err != nil {
-		return "", fmt.Errorf("ID: %v is not a valid string", id)
+		return "", errors.Errorf("ID: %v is not a valid string", id)
 	}
 
 	return id, nil
@@ -93,17 +84,17 @@ func parseDeadline(dl string, location *time.Location) (time.Time, error) {
 	return *t, nil
 }
 
-func parseIsSent(h *colly.HTMLElement) bool {
-	return h.DOM.Children().First().HasClass("fa-check-square-o")
+func parseIsSent(s *goquery.Selection) bool {
+	return s.Children().First().HasClass("fa-check-square-o")
 }
 
-func sortAssignments(a sortable) {
-	sort.Sort(a)
+func sortByDeadline(a []Assignment) {
+	sort.Slice(a, func(i, j int) bool {
+		return a[i].Deadline.Before(a[j].Deadline)
+	})
 }
 
-func (a *Assignment) PrepareURL(
-	baseURL string,
-) (string, error) {
+func (a *Assignment) PrepareURL(baseURL string) (string, error) {
 	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")
 	if err != nil {
 		return "", err
@@ -115,4 +106,22 @@ func (a *Assignment) PrepareURL(
 	finalURL.RawQuery = values.Encode()
 
 	return finalURL.String(), nil
+}
+
+func (a Assignment) IsExcluded(
+	opts *config.Options,
+	courseID string,
+	location *time.Location,
+) bool {
+	if !opts.IncludeExpired && a.Deadline.Before(time.Now().In(location)) {
+		return true
+	}
+
+	for _, excludedString := range opts.ExcludedAssignments[courseID] {
+		if strings.Contains(a.Title, excludedString) {
+			return true
+		}
+	}
+
+	return false
 }

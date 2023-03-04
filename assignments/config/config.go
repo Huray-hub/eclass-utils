@@ -3,40 +3,34 @@ package config
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"syscall"
-	"time"
 
+	auth "github.com/Huray-hub/eclass-utils/authentication"
+	"github.com/Huray-hub/eclass-utils/course"
 	"golang.org/x/term"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
-	Credentials Credentials `yaml:"credentials"`
-	Options     Options     `yaml:"options"`
-}
-
-type Credentials struct {
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Credentials auth.Credentials `yaml:"credentials"`
+	Options     Options          `yaml:"options"`
 }
 
 type Options struct {
-	BaseDomain          string              `yaml:"baseDomain"`
-	PlainText           bool                `yaml:"plainText"`
-	IncludeExpired      bool                `yaml:"includeExpired"`
-	ExportICS           bool                `yaml:"exportICS"`
-	ExcludedCourses     map[string]struct{} `yaml:"excludedCourses"`
+	PlainText      bool   `yaml:"plainText"`
+	IncludeExpired bool   `yaml:"includeExpired"`
+	ExportICS      bool   `yaml:"exportICS"`
 	ExcludedAssignments map[string][]string `yaml:"excludedAssignments"`
+	course.Options      `yaml:",inline"`
 }
 
 // Import function will read options and credentials from the
 // config.yaml file. If the config file is missing, it will
 // be created with default values.
-func Import() (*Options, *Credentials, error) {
+func Import() (*Options, *auth.Credentials, error) {
 	configPath, err := path()
 	if err != nil {
 		return nil, nil, err
@@ -67,7 +61,7 @@ func decodeYaml(yamlFile []byte) (*Config, error) {
 
 // Ensure function will check for required configuration values
 // that are missing. If they do, they will be requested from Stdin.
-func Ensure(opts *Options, creds *Credentials) error {
+func Ensure(opts *Options, creds *auth.Credentials) error {
 	updateOpts, err := ensureOptions(opts)
 	if err != nil {
 		return err
@@ -118,23 +112,10 @@ func isValidDomain(baseDomain string) bool {
 		fmt.Println("Invalid domain. Try eclass.<yourcollege>.gr")
 		return false
 	}
-	client := http.Client{
-		Timeout: 10 * time.Second,
-	}
-	resp, err := client.Head("https://" + baseDomain)
-	if err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-	if resp.StatusCode != http.StatusOK {
-		fmt.Println(resp.StatusCode)
-		fmt.Println("Invalid domain")
-		return false
-	}
 	return true
 }
 
-func ensureCredentials(creds *Credentials) (bool, error) {
+func ensureCredentials(creds *auth.Credentials) (bool, error) {
 	updateUsername, err := ensureUsername(creds)
 	if err != nil {
 		return false, err
@@ -160,8 +141,8 @@ func ensureCredentials(creds *Credentials) (bool, error) {
 	return false, nil
 }
 
-func ensureUsername(creds *Credentials) (bool, error) {
-	if creds.Username == "" {
+func ensureUsername(creds *auth.Credentials) (bool, error) {
+	if creds.UsernameEmpty() {
 		err := inputStdin(&creds.Username, "Username")
 		if err != nil {
 			return false, err
@@ -171,8 +152,8 @@ func ensureUsername(creds *Credentials) (bool, error) {
 	return false, nil
 }
 
-func ensurePassword(creds *Credentials) (bool, error) {
-	if creds.Password == "" {
+func ensurePassword(creds *auth.Credentials) (bool, error) {
+	if creds.PasswordEmpty() {
 		err := inputPasswordStdin(&creds.Password)
 		if err != nil {
 			return false, err
@@ -243,18 +224,21 @@ func newDefault() *Config {
 	return &Config{
 		Credentials: *newDefaultCredentials(),
 		Options: Options{
-			BaseDomain:          "",
+			// BaseDomain:          "",
 			PlainText:           false,
 			IncludeExpired:      false,
 			ExportICS:           false,
-			ExcludedCourses:     map[string]struct{}{},
 			ExcludedAssignments: map[string][]string{},
+			// ExcludedCourses: map[string]struct{}{},
+			Options: course.Options{
+				ExcludedCourses: map[string]struct{}{},
+			},
 		},
 	}
 }
 
-func newDefaultCredentials() *Credentials {
-	return &Credentials{
+func newDefaultCredentials() *auth.Credentials {
+	return &auth.Credentials{
 		Username: "",
 		Password: "",
 	}

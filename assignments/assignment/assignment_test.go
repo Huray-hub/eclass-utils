@@ -1,9 +1,56 @@
 package assignment
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"testing"
 	"time"
+
+	"github.com/Huray-hub/eclass-utils/assignments/config"
 )
+
+func ExampleService_Fetch()  {
+	opts, creds, err := config.Import()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	opts.IncludeExpired = true
+
+	ctx := context.Background()
+	service, err := NewService(ctx, opts, *creds, nil)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	assignments, err := service.Fetch(ctx)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	fmt.Printf("%v", len(assignments))
+}
+
+func BenchmarkFetchAssignments(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		opts, creds, err := config.Import()
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+		opts.IncludeExpired = true
+
+		ctx := context.Background()
+		service, err := NewService(ctx, opts, *creds, nil)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		assignments, err := service.Fetch(ctx)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		fmt.Printf("%v", len(assignments))
+	}
+}
 
 func TestParseNearDeadline_Tomorrow(t *testing.T) {
 	t.Skip("not ready")

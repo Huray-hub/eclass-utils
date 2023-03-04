@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 
 	"github.com/Huray-hub/eclass-utils/assignments/assignment"
 	"github.com/Huray-hub/eclass-utils/assignments/calendar"
@@ -46,6 +49,11 @@ func init() {
 }
 
 func main() {
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	go handleSignals(signalCh, cancelFunc)
+
 	opts, creds, err := config.Import()
 	if err != nil {
 		log.Fatal(err.Error())
@@ -58,7 +66,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	assignments, err := assignment.Get(opts, creds)
+	service, err := assignment.NewService(ctx, opts, *creds, nil)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	assignments, err := service.Fetch(ctx)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -75,5 +88,26 @@ func main() {
 		}
 
 		fmt.Printf("stored in\n%v\n", path)
+	}
+}
+
+func handleSignals(signalCh <-chan os.Signal, cancelFunc context.CancelFunc) {
+	for signal := range signalCh {
+		switch signal {
+		case syscall.SIGTERM:
+			fmt.Println(" signal:", signal.String())
+			cancelFunc()
+			os.Exit(0)
+		case syscall.SIGINT:
+			fmt.Println(" signal:", signal.String())
+			cancelFunc()
+			os.Exit(0)
+		case syscall.SIGQUIT:
+			fmt.Println(" signal:", signal.String())
+			cancelFunc()
+			os.Exit(0)
+		default:
+			fmt.Println(" unhandled/unknown signal")
+		}
 	}
 }

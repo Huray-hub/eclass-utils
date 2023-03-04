@@ -5,9 +5,10 @@ import (
 	"strings"
 
 	"github.com/Huray-hub/eclass-utils/assignments/config"
+	auth "github.com/Huray-hub/eclass-utils/authentication"
 )
 
-func Read(opts *config.Options, creds *config.Credentials) {
+func Read(opts *config.Options, creds *auth.Credentials) {
 	flag.BoolVar(
 		&opts.PlainText,
 		"p",
@@ -96,7 +97,7 @@ func parseExcludedAssignments(raw string) map[string][]string {
 	return res
 }
 
-func flagsToCredentials(username string, password string, creds *config.Credentials) {
+func flagsToCredentials(username string, password string, creds *auth.Credentials) {
 	if username != "" {
 		creds.Username = username
 	}

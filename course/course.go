@@ -25,6 +25,13 @@ func (crs Course) String() string {
 	return fmt.Sprintf("%v,%v,%v", crs.ID, crs.Name, crs.URL)
 }
 
+func (crs Course) IsExcluded(opts Options) bool {
+	if _, ok := opts.ExcludedCourses[crs.ID]; ok {
+		return true
+	}
+	return false
+}
+
 func (crs Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 	finalURL, err := url.Parse(baseURL)
 	if err != nil {

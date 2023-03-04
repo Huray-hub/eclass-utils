@@ -6,14 +6,14 @@ import (
 
 	"github.com/Huray-hub/eclass-utils/assignments/assignment"
 	"github.com/Huray-hub/eclass-utils/assignments/calendar"
-	crs "github.com/Huray-hub/eclass-utils/assignments/course"
+	"github.com/Huray-hub/eclass-utils/course"
 )
 
 func TestExport(t *testing.T) {
 	t.Skip("currently I use this only as a shorcut to my workflow")
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
-	course := &crs.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
+	course := &course.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
 	location, err := time.LoadLocation("Europe/Athens")
 	if err != nil {
 		t.Fatal(err.Error())

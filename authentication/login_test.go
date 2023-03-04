@@ -29,7 +29,10 @@ func ExampleLogin() {
 	domainURL := "https://eclass.youruniversity.gr"
 
 	// Create session
-	_ = auth.Login(context.Background(), domainURL, creds, client)
+	_, err = auth.Login(context.Background(), domainURL, creds, client)
+	if err != nil {
+		return
+	}
 
 	// Do something as authenticated user
 	resp, err := client.Get(domainURL + "/main/my_courses.php")
