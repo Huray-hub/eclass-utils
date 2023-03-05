@@ -11,6 +11,7 @@ import (
 )
 
 // Login function authenticates user to eclass and stores session to the client provided.
+// After successful login, returns the http.Client.
 func Login(
 	ctx context.Context,
 	domainURL string,

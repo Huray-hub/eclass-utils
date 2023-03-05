@@ -8,7 +8,7 @@ import (
 	auth "github.com/Huray-hub/eclass-utils/authentication"
 )
 
-func ExampleLogin() {
+func ExampleLogin_withClient() {
 	// Your credentials
 	creds := auth.Credentials{
 		Username: "your eclass username",
@@ -16,11 +16,11 @@ func ExampleLogin() {
 	}
 
 	// Instantiate an empty cookie jar and pass to http.Client
+	// If you don't provide one, Login function will.
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return
 	}
-
 	client := &http.Client{
 		Jar: jar,
 	}
@@ -35,10 +35,31 @@ func ExampleLogin() {
 	}
 
 	// Do something as authenticated user
-	resp, err := client.Get(domainURL + "/main/my_courses.php")
+	_, err = client.Get(domainURL + "/main/my_courses.php")
 	if err != nil {
 		return
 	}
-	_ = resp
+}
 
+func ExampleLogin_noClient() {
+	// Your credentials
+	creds := auth.Credentials{
+		Username: "your-username",
+		Password: "your-password",
+	}
+
+	// Your university domainURL
+	domainURL := "https://eclass.your-university.gr"
+
+	// Login function will return a new http.client
+	client, err := auth.Login(context.Background(), domainURL, creds, nil)
+	if err != nil {
+		return
+	}
+
+	// Do something as authenticated user
+	_, err = client.Get(domainURL + "/main/my_courses.php")
+	if err != nil {
+		return
+	}
 }

@@ -88,12 +88,14 @@ func parseIsSent(s *goquery.Selection) bool {
 	return s.Children().First().HasClass("fa-check-square-o")
 }
 
-func sortByDeadline(a []Assignment) {
+// SortByDeadline function sorts assignments by descending deadline
+func SortByDeadline(a []Assignment) {
 	sort.Slice(a, func(i, j int) bool {
 		return a[i].Deadline.Before(a[j].Deadline)
 	})
 }
 
+// PrepareURL method prepares URL for assignments' own page
 func (a *Assignment) PrepareURL(baseURL string) (string, error) {
 	finalURL, err := url.Parse(baseURL + "/modules/work/index.php")
 	if err != nil {
@@ -108,6 +110,7 @@ func (a *Assignment) PrepareURL(baseURL string) (string, error) {
 	return finalURL.String(), nil
 }
 
+// IsExcluded method determines if the assignment should be excluded from final result
 func (a Assignment) IsExcluded(
 	opts *config.Options,
 	courseID string,

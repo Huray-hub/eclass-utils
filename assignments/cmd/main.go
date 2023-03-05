@@ -71,7 +71,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	assignments, err := service.Fetch(ctx)
+	assignments, err := service.FetchAssignments(ctx)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

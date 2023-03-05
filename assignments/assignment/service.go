@@ -41,7 +41,18 @@ func NewService(
 	}, nil
 }
 
-func (svc *Service) Fetch(ctx context.Context) ([]Assignment, error) {
+
+// FetchAssignments method will retrieve all assignments of your assignments and filter them out 
+// based on Service's options.
+//
+// 1. retrieves enrolled courses, 
+//
+// 2. concurrently fans-out each course's http request + assignment scrapping through channels, 
+//
+// 3. fans-in channels' result into one, 
+//
+// 4. sorts them by deadline
+func (svc *Service) FetchAssignments(ctx context.Context) ([]Assignment, error) {
 	courses, err := course.GetEnrolled(ctx, svc.opts.Options, svc.client)
 	if err != nil {
 		return nil, err
@@ -58,7 +69,7 @@ func (svc *Service) Fetch(ctx context.Context) ([]Assignment, error) {
 		assignments = append(assignments, asg)
 	}
 
-	sortByDeadline(assignments)
+	SortByDeadline(assignments)
 
 	return assignments, nil
 }
@@ -124,24 +135,22 @@ func (svc *Service) getAssignmentsPerCourse(ctx context.Context, course course.C
 
 		assignmentsURL, err := course.PrepareAssignmentsURL(svc.opts.BaseDomain)
 		if err != nil {
-			// return nil, err
 			return
 		}
 
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://"+assignmentsURL, nil)
 		if err != nil {
-			// return nil, err
 			return
 		}
 
 		resp, err := svc.client.Do(req)
 		if err != nil {
 			return
-			// return nil, err
 		}
 		defer func() {
 			err = resp.Body.Close()
 			if err != nil {
+				// TODO: avoid panic. Propagate error instead
 				panic("could not close response body")
 			}
 		}()
@@ -149,14 +158,16 @@ func (svc *Service) getAssignmentsPerCourse(ctx context.Context, course course.C
 		doc, err := goquery.NewDocumentFromReader(resp.Body)
 		if err != nil {
 			return
-			// return nil, err
 		}
 
+		// instead of query first rows and then query again each row to get table cells, 
+		// knowing the each row has 4, I immediately get query tds for performance improvement
 		tds := make([]*goquery.Selection, 4)
 		doc.Find("table#assignment_table tbody tr td").
 			Each(func(i int, td *goquery.Selection) {
 				tds[i%4] = td
 
+				// on each 4th element process with assignment creation
 				if i%4 != 3 {
 					return
 				}
