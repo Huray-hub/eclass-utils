@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/Huray-hub/eclass-utils/assignments v0.0.0-20230228204259-d4dece8990ee
-	github.com/Huray-hub/eclass-utils/authentication v0.0.0-20230228204259-d4dece8990ee
 	github.com/PuerkitoBio/goquery v1.8.1
 )
 

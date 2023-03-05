@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/Huray-hub/eclass-utils/assignments/config"
-	auth "github.com/Huray-hub/eclass-utils/authentication"
+	"github.com/Huray-hub/eclass-utils/auth"
 	"github.com/Huray-hub/eclass-utils/course"
 )
 

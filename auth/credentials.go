@@ -1,4 +1,4 @@
-package authentication
+package auth
 
 type Credentials struct {
 	Username string

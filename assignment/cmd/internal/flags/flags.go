@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/Huray-hub/eclass-utils/assignment/config"
-	auth "github.com/Huray-hub/eclass-utils/authentication"
+	"github.com/Huray-hub/eclass-utils/auth"
 )
 
 func Read(opts *config.Options, creds *auth.Credentials) {

@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/Huray-hub/eclass-utils/assignments v0.0.0-20230305003618-81760dac5374
-	github.com/Huray-hub/eclass-utils/authentication v0.0.0-20230228204259-d4dece8990ee
 	github.com/Huray-hub/eclass-utils/course v0.0.0-20230305003618-81760dac5374
 	github.com/arran4/golang-ical v0.0.0-20230213232137-07c6aad5e4f0
 	github.com/pkg/errors v0.9.1

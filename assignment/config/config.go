@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	auth "github.com/Huray-hub/eclass-utils/authentication"
+	"github.com/Huray-hub/eclass-utils/auth"
 	"github.com/Huray-hub/eclass-utils/course"
 	"golang.org/x/term"
 	"gopkg.in/yaml.v3"

@@ -1,5 +1,5 @@
 go 1.20
 
 use ./assignment
-use ./authentication
+use ./auth
 use ./course

@@ -1,11 +1,11 @@
-package authentication_test
+package auth_test
 
 import (
 	"context"
 	"net/http"
 	"net/http/cookiejar"
 
-	auth "github.com/Huray-hub/eclass-utils/authentication"
+	"github.com/Huray-hub/eclass-utils/auth"
 )
 
 func ExampleLogin_withClient() {
