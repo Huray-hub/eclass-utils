@@ -3,11 +3,11 @@ module github.com/Huray-hub/eclass-utils/assignment
 go 1.20
 
 require (
-	github.com/Huray-hub/eclass-utils/assignments v0.0.0-20230305003618-81760dac5374
-	github.com/Huray-hub/eclass-utils/course v0.0.0-20230305003618-81760dac5374
+	github.com/Huray-hub/eclass-utils/auth v0.0.0-20230305011325-d758201f03ed
+	github.com/Huray-hub/eclass-utils/course v0.0.0-20230305011325-d758201f03ed
 	github.com/arran4/golang-ical v0.0.0-20230213232137-07c6aad5e4f0
 	github.com/pkg/errors v0.9.1
-	golang.org/x/term v0.5.0
+	golang.org/x/term v0.6.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

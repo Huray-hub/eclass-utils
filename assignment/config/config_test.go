@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 )
 
 func TestImport(t *testing.T) {

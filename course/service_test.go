@@ -8,9 +8,10 @@ import (
 	"net/http/cookiejar"
 	"testing"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
 	"github.com/Huray-hub/eclass-utils/auth"
 	"github.com/Huray-hub/eclass-utils/course"
+
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 )
 
 func ExampleGetEnrolled() {
