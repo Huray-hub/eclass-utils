@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 	auth "github.com/Huray-hub/eclass-utils/authentication"
 	"github.com/Huray-hub/eclass-utils/course"
 )
@@ -52,7 +52,7 @@ func ExampleService_FetchAssignments_yourOwnConfig() {
 		},
 		Options: course.Options{
 			ExcludedCourses: map[string]struct{}{
-				"courseID":  {},
+				"courseID":        {},
 				"anotherCourseID": {},
 			},
 		},

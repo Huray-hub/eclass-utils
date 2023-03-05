@@ -10,11 +10,11 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"github.com/Huray-hub/eclass-utils/assignments/assignment"
-	"github.com/Huray-hub/eclass-utils/assignments/calendar"
-	"github.com/Huray-hub/eclass-utils/assignments/cmd/flags"
-	"github.com/Huray-hub/eclass-utils/assignments/cmd/output"
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment"
+	"github.com/Huray-hub/eclass-utils/assignment/calendar"
+	"github.com/Huray-hub/eclass-utils/assignment/cmd/internal/flags"
+	"github.com/Huray-hub/eclass-utils/assignment/cmd/internal/output"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 )
 
 func init() {

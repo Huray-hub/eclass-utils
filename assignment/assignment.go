@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 	"github.com/Huray-hub/eclass-utils/course"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pkg/errors"

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/assignment"
+	"github.com/Huray-hub/eclass-utils/assignment"
 	"github.com/olekukonko/tablewriter"
 )
 

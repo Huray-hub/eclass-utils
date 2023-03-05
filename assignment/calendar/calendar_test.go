@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/assignment"
-	"github.com/Huray-hub/eclass-utils/assignments/calendar"
+	"github.com/Huray-hub/eclass-utils/assignment"
+	"github.com/Huray-hub/eclass-utils/assignment/calendar"
 	"github.com/Huray-hub/eclass-utils/course"
 )
 

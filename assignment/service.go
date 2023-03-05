@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 	auth "github.com/Huray-hub/eclass-utils/authentication"
 	"github.com/Huray-hub/eclass-utils/course"
 	"github.com/PuerkitoBio/goquery"
@@ -41,15 +41,14 @@ func NewService(
 	}, nil
 }
 
-
-// FetchAssignments method will retrieve all assignments of your assignments and filter them out 
+// FetchAssignments method will retrieve all assignments of your assignments and filter them out
 // based on Service's options.
 //
-// 1. retrieves enrolled courses, 
+// 1. retrieves enrolled courses,
 //
-// 2. concurrently fans-out each course's http request + assignment scrapping through channels, 
+// 2. concurrently fans-out each course's http request + assignment scrapping through channels,
 //
-// 3. fans-in channels' result into one, 
+// 3. fans-in channels' result into one,
 //
 // 4. sorts them by deadline
 func (svc *Service) FetchAssignments(ctx context.Context) ([]Assignment, error) {
@@ -160,7 +159,7 @@ func (svc *Service) getAssignmentsPerCourse(ctx context.Context, course course.C
 			return
 		}
 
-		// instead of query first rows and then query again each row to get table cells, 
+		// instead of query first rows and then query again each row to get table cells,
 		// knowing the each row has 4, I immediately get query tds for performance improvement
 		tds := make([]*goquery.Selection, 4)
 		doc.Find("table#assignment_table tbody tr td").

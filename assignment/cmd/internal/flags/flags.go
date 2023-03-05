@@ -4,7 +4,7 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/Huray-hub/eclass-utils/assignments/config"
+	"github.com/Huray-hub/eclass-utils/assignment/config"
 	auth "github.com/Huray-hub/eclass-utils/authentication"
 )
 

@@ -1,5 +1,9 @@
+github.com/Huray-hub/eclass-utils/assignments v0.0.0-20230305003618-81760dac5374 h1:v5yjkCdcBNQtnFkRyamHG43hS+fqRG77CaD+9mqU6zk=
+github.com/Huray-hub/eclass-utils/assignments v0.0.0-20230305003618-81760dac5374/go.mod h1:8RGWdacPlgRvm+OCJYkIruEaGG9E0X/jEZgOKA29YC4=
 github.com/Huray-hub/eclass-utils/authentication v0.0.0-20230228204259-d4dece8990ee h1:wz36lRU6RlzVwUF0I9XUMMlCMf4RqyYbAtRltGWVNGk=
 github.com/Huray-hub/eclass-utils/authentication v0.0.0-20230228204259-d4dece8990ee/go.mod h1:8NSqNdbAsF8Sl8uU5Xqde4YDNg/c+QANw7sbEevzhik=
+github.com/Huray-hub/eclass-utils/course v0.0.0-20230305003618-81760dac5374 h1:xB7rV7QB7HAfo9C2S4UQaZTCpMCoY7gdp2MR0tnY8eg=
+github.com/Huray-hub/eclass-utils/course v0.0.0-20230305003618-81760dac5374/go.mod h1:2CGpaE2P8MUwOo4WRWpd9mHBSXR5r2d/+xhirfjLeGs=
 github.com/PuerkitoBio/goquery v1.8.1 h1:uQxhNlArOIdbrH1tr0UXwdVFgDcZDrZVdcpygAcwmWM=
 github.com/PuerkitoBio/goquery v1.8.1/go.mod h1:Q8ICL1kNUJ2sXGoAhPGUdYDJvgQgHzJsnnd3H7Ho5jQ=
 github.com/andybalholm/cascadia v1.3.1 h1:nhxRkql1kdYCc8Snf7D5/D3spOX+dBgjA6u8x004T2c=
@@ -49,7 +53,6 @@ golang.org/x/sys v0.0.0-20210423082822-04245dca01da/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.5.0 h1:MUK/U/4lj1t1oPg0HfuXDN/Z1wv31ZJ/YcPiGccS4DU=
 golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0 h1:MVltZSvRTcU2ljQOhs94SXPftV6DCNnZViHeQps87pQ=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
