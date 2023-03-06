@@ -54,29 +54,30 @@ func main() {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	go handleSignals(signalCh, cancelFunc)
 
-	opts, creds, err := config.Import()
+	cfg, err := config.ImportDefault()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	flags.Read(opts, creds)
+	flags.Read(cfg)
 
-	err = config.Ensure(opts, creds)
+	err = config.Ensure(cfg)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	service, err := assignment.NewService(ctx, opts, *creds, nil)
+	service, err := assignment.NewService(ctx, *cfg, nil)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
+	opts := cfg.Options
 	assignments, err := service.FetchAssignments(ctx)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	err = output.PrintAssignments(assignments, opts.PlainText)
+	err = output.PrintAssignments(assignments,opts.PlainText)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

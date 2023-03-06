@@ -28,65 +28,60 @@ type Options struct {
 }
 
 // Import function will read options and credentials from the
-// config.yaml file. If the config file is missing, it will
+// given path of a yaml file. If the config file is missing, it will
 // be created with default values.
-func Import() (*Options, *auth.Credentials, error) {
-	configPath, err := path()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	yamlFile, err := os.ReadFile(configPath)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	config, err := decodeYaml(yamlFile)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return &config.Options, &config.Credentials, nil
-}
-
-func decodeYaml(yamlFile []byte) (*Config, error) {
-	var cfg Config
-	err := yaml.Unmarshal(yamlFile, &cfg)
+func Import(configPath string) (*Config, error) {
+	err := ensurePath(configPath)
 	if err != nil {
 		return nil, err
 	}
 
-	return &cfg, nil
+	yamlFile, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil, err
+	}
+
+	var cfg *Config
+	err = yaml.Unmarshal(yamlFile, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
+// Import function will read options and credentials from the
+// given path of a yaml file. If the config file is missing, it will
+// be created with default values.
+func ImportDefault() (*Config, error) {
+	configPath, err := defaultPath()
+	if err != nil {
+		return nil, err
+	}
+
+	return Import(configPath)
 }
 
 // Ensure function will check for required configuration values
 // that are missing. If they do, they will be requested from Stdin.
-func Ensure(opts *Options, creds *auth.Credentials) error {
-	updateOpts, err := ensureOptions(opts)
+func Ensure(cfg *Config) error {
+	updateOpts, err := ensureOptions(&cfg.Options)
 	if err != nil {
 		return err
 	}
 
-	updateCreds, err := ensureCredentials(creds)
+	updateCreds, err := ensureCredentials(&cfg.Credentials)
 	if err != nil {
 		return err
 	}
 
 	if updateOpts || updateCreds {
-		configDir, err := os.UserConfigDir()
+		path,err := defaultPath()
 		if err != nil {
 			return err
 		}
-		path := filepath.Join(configDir, "eclass-utils", "config.yaml")
 
-		cfg := &Config{Options: *opts}
-		if updateCreds {
-			cfg.Credentials = *creds
-		} else {
-			cfg.Credentials = *newDefaultCredentials()
-		}
-
-		err = createConfig(path, cfg)
+		err = createConfig(path, *cfg)
 		if err != nil {
 			return err
 		}
@@ -184,24 +179,24 @@ func inputPasswordStdin(password *string) error {
 	return nil
 }
 
-func path() (string, error) {
+func defaultPath() (string, error) {
 	homeConfig, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 
-	path := filepath.Join(homeConfig, "eclass-utils", "config.yaml")
-	if _, err = os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		err = createConfig(path, newDefault())
-		if err != nil {
-			return "", err
-		}
-	}
-
-	return path, nil
+	return filepath.Join(homeConfig, "eclass-utils", "config.yaml"), nil
 }
 
-func createConfig(configPath string, config *Config) error {
+func ensurePath(path string) error {
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return createConfig(path, newDefault())
+	}
+
+	return nil
+}
+
+func createConfig(configPath string, config Config) error {
 	err := os.MkdirAll(filepath.Dir(configPath), 0755)
 	if err != nil {
 		return err
@@ -220,9 +215,12 @@ func createConfig(configPath string, config *Config) error {
 	return nil
 }
 
-func newDefault() *Config {
-	return &Config{
-		Credentials: *newDefaultCredentials(),
+func newDefault() Config {
+	return Config{
+		Credentials: auth.Credentials{
+		Username: "",
+		Password: "",
+	},
 		Options: Options{
 			PlainText:           false,
 			IncludeExpired:      false,
@@ -232,12 +230,5 @@ func newDefault() *Config {
 				ExcludedCourses: map[string]struct{}{},
 			},
 		},
-	}
-}
-
-func newDefaultCredentials() *auth.Credentials {
-	return &auth.Credentials{
-		Username: "",
-		Password: "",
 	}
 }

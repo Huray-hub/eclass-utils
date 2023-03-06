@@ -11,16 +11,16 @@ func TestImport(t *testing.T) {
 	//Arrange
 
 	//Act
-	opts, _, err := config.Import()
+	cfg, err := config.ImportDefault()
 	if err != nil {
 		t.Fatalf("failed")
 	}
 
-	if len(opts.ExcludedCourses) == 0 {
+	if len(cfg.Options.ExcludedCourses) == 0 {
 		t.Fatalf("falied to import")
 	}
 
-	if len(opts.ExcludedCourses) == 5 {
+	if len(cfg.Options.ExcludedCourses) == 5 {
 		t.Fatalf("falied to import")
 	}
 

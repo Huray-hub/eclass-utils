@@ -112,7 +112,7 @@ func (a *Assignment) PrepareURL(baseURL string) (string, error) {
 
 // IsExcluded method determines if the assignment should be excluded from final result
 func (a Assignment) IsExcluded(
-	opts *config.Options,
+	opts config.Options,
 	courseID string,
 	location *time.Location,
 ) bool {

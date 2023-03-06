@@ -8,20 +8,20 @@ import (
 	"github.com/Huray-hub/eclass-utils/auth"
 )
 
-func Read(opts *config.Options, creds *auth.Credentials) {
+func Read(cfg *config.Config) {
 	flag.BoolVar(
-		&opts.PlainText,
+		&cfg.Options.PlainText,
 		"p",
-		opts.PlainText,
+		cfg.Options.PlainText,
 		"Print results in plain csv format",
 	)
 	flag.BoolVar(
-		&opts.IncludeExpired,
+		&cfg.Options.IncludeExpired,
 		"i",
-		opts.IncludeExpired,
+		cfg.Options.IncludeExpired,
 		"Include expired assignments",
 	)
-	flag.BoolVar(&opts.ExportICS, "c", opts.ExportICS, "Export calendar file")
+	flag.BoolVar(&cfg.Options.ExportICS, "c", cfg.Options.ExportICS, "Export calendar file")
 	baseDomain := flag.String(
 		"d",
 		"",
@@ -44,8 +44,8 @@ Use course ID and a part of the assignment's title to ignore it from results
 
 	flag.Parse()
 
-	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments, opts)
-	flagsToCredentials(*username, *password, creds)
+	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments,&cfg.Options)
+	flagsToCredentials(*username, *password, &cfg.Credentials)
 }
 
 func flagsToOptions(

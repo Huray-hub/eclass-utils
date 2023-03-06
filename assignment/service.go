@@ -13,15 +13,14 @@ import (
 )
 
 type Service struct {
-	opts     *config.Options
+	opts   config.Options
 	location *time.Location
 	client   *http.Client
 }
 
 func NewService(
 	ctx context.Context,
-	opts *config.Options,
-	creds auth.Credentials,
+	cfg config.Config,
 	client *http.Client,
 ) (*Service, error) {
 	location, err := time.LoadLocation("Europe/Athens")
@@ -29,13 +28,13 @@ func NewService(
 		return nil, err
 	}
 
-	client, err = auth.Login(ctx, "https://"+opts.BaseDomain, creds, client)
+	client, err = auth.Login(ctx, "https://"+cfg.Options.BaseDomain, cfg.Credentials, client)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Service{
-		opts:     opts,
+		opts:   cfg.Options,
 		location: location,
 		client:   client,
 	}, nil

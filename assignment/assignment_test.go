@@ -16,14 +16,14 @@ import (
 
 func ExampleService_FetchAssignments_importConfigFromYaml() {
 	// Import options and credentials from config.yml
-	opts, creds, err := config.Import()
+	cfg, err := config.ImportDefault()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	ctx := context.Background()
 	// Not providing http.Client is fine, NewService will initialize its own
-	service, err := NewService(ctx, opts, *creds, nil)
+	service, err := NewService(ctx, *cfg, nil)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -39,27 +39,29 @@ func ExampleService_FetchAssignments_importConfigFromYaml() {
 func ExampleService_FetchAssignments_yourOwnConfig() {
 	// Provide your own options and credentials
 	// view README.md for more info
-	opts := &config.Options{
-		PlainText:      false,
-		IncludeExpired: false,
-		ExportICS:      false,
-		ExcludedAssignments: map[string][]string{
-			"courseID": {
-				"for people who are not registered to any lab",
-				"Monday lab",
-				"Monday Lab",
+	cfg := config.Config{
+		Credentials: auth.Credentials{
+			Username: "your-username",
+			Password: "your-password",
+		},
+		Options: config.Options{
+			PlainText:      false,
+			IncludeExpired: false,
+			ExportICS:      false,
+			ExcludedAssignments: map[string][]string{
+				"courseID": {
+					"for people who are not registered to any lab",
+					"Monday lab",
+					"Monday Lab",
+				},
+			},
+			Options: course.Options{
+				ExcludedCourses: map[string]struct{}{
+					"courseID":        {},
+					"anotherCourseID": {},
+				},
 			},
 		},
-		Options: course.Options{
-			ExcludedCourses: map[string]struct{}{
-				"courseID":        {},
-				"anotherCourseID": {},
-			},
-		},
-	}
-	creds := auth.Credentials{
-		Username: "your-username",
-		Password: "your-password",
 	}
 
 	// Providing your own client, authentication requires cookie Jar.
@@ -71,7 +73,7 @@ func ExampleService_FetchAssignments_yourOwnConfig() {
 	client := &http.Client{Jar: jar}
 
 	ctx := context.Background()
-	service, err := NewService(ctx, opts, creds, client)
+	service, err := NewService(ctx, cfg, client)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -86,15 +88,15 @@ func ExampleService_FetchAssignments_yourOwnConfig() {
 
 func BenchmarkFetchAssignments(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		opts, creds, err := config.Import()
+		cfg, err := config.ImportDefault()
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 
-		opts.IncludeExpired = true
+		cfg.Options.IncludeExpired = true
 
 		ctx := context.Background()
-		service, err := NewService(ctx, opts, *creds, nil)
+		service, err := NewService(ctx, *cfg, nil)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

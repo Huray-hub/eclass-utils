@@ -51,18 +51,18 @@ func ExampleGetEnrolled() {
 // TODO: replace assignments dependency
 func BenchmarkGetEnrolledCourses(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		opts, creds, err := config.Import()
+		cfg, err := config.ImportDefault()
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 
 		ctx := context.Background()
-		client, err := auth.Login(ctx, "https://"+opts.BaseDomain, *creds, nil)
+		client, err := auth.Login(ctx, "https://"+cfg.Options.BaseDomain, cfg.Credentials, nil)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
 
-		courses, err := course.GetEnrolled(ctx, opts.Options, client)
+		courses, err := course.GetEnrolled(ctx, cfg.Options.Options, client)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
