@@ -41,7 +41,7 @@ func Import(configPath string) (*Config, error) {
 		return nil, err
 	}
 
-	var cfg *Config
+	cfg := new(Config)
 	err = yaml.Unmarshal(yamlFile, cfg)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func Ensure(cfg *Config) error {
 	}
 
 	if updateOpts || updateCreds {
-		path,err := defaultPath()
+		path, err := defaultPath()
 		if err != nil {
 			return err
 		}
@@ -218,9 +218,9 @@ func createConfig(configPath string, config Config) error {
 func newDefault() Config {
 	return Config{
 		Credentials: auth.Credentials{
-		Username: "",
-		Password: "",
-	},
+			Username: "",
+			Password: "",
+		},
 		Options: Options{
 			PlainText:           false,
 			IncludeExpired:      false,
