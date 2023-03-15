@@ -88,6 +88,16 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
+	parsedURL, err := url.Parse(domainURL)
+	if err != nil {
+		return err
+	}
+
+	sidBefore, err := sessionID(parsedURL, client)
+	if err != nil {
+		return err
+	}
+
 	res, err := client.Do(req)
 	if err != nil {
 		return err
@@ -97,5 +107,23 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 		return errors.Errorf("could not login; status code %v", res.StatusCode)
 	}
 
+	sidAfter, err := sessionID(parsedURL, client)
+	if err != nil {
+		return err
+	}
+
+	if sidBefore == sidAfter {
+		return errors.New("could not login; invalid credentials")
+	}
+
 	return nil
+}
+
+func sessionID(url *url.URL, client *http.Client) (string, error) {
+	for _, cookie := range client.Jar.Cookies(url) {
+		if cookie.Name == "PHPSESSID" {
+			return cookie.Value, nil
+		}
+	}
+	return "", errors.New("session not found")
 }
