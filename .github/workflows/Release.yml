@@ -19,34 +19,20 @@ jobs:
       - name: Build
         run: go build -v -o assignments assignment/cmd/main.go
       
-      - name: Upload To Github Release
-        uses: xresloader/upload-to-github-release@v1.3.12
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Automatic Releases
+        # You may pin to the exact commit or the version.
+        # uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0
+        uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
-          # The files or file patterns to upload. You can upload multiple files by split them by semicolon. You can use the glob pattern to find the files.
-          file: assignments
-          # The files or file patterns to delete before uploading new files. You can delete multiple files by split them by semicolon. You can use the glob pattern to find the files.
-          # delete_file: # optional, default is 
-          # If you need to overwrite existing files, add overwrite: true to the with.
-          # overwrite: # optional, default is false
-          # The resultant deployment is a draft Release that only repository collaborators can see. This gives you an opportunity to examine and edit the draft release.
-          # draft: # optional, default is 
-          # The resultant deployment is a Prerelease. This gives you an opportunity to examine and edit the prerelease.
-          # prerelease: # optional, default is 
-          # With tags: true, your Releases deployment will trigger if and only if the build is a tagged build.
-          # tags: # optional, default is false
-          # Only work on these branches(splited by semicolon), set to nothing to accept all branches.
-          branches: main
-          # With verbose: true, be verbose.
-          verbose: true
-          # Set custom tag name.
-          tag_name: assignments
-          # If try to update latest release.
-          # update_latest_release: # optional, default is false
-          # Set release id to update.If release_id is set, this step will fail if we can not find it.
-          # release_id: # optional, default is 
-          # Set the owner of target repository(default: current user/origanization).
-          # target_owner: # optional, default is 
-          # Set target repository(default: current repository).
-          # target_repo: # optional, default is 
+          # GitHub secret token
+          repo_token: ${{ secrets.TOKEN }}
+          # Git tag (for automatic releases)
+          # automatic_release_tag: # optional
+          # Should this release be marked as a draft?
+          # draft: # optional
+          # Should this release be marked as a pre-release?
+          # prerelease: # optional, default is true
+          # Release title (for automatic releases)
+          title: Eclass utils
+          # Assets to upload to the release
+          files: assignments
