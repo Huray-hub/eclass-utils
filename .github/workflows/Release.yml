@@ -14,18 +14,18 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          go-version: 1.20
 
       - name: Build
-        run: go build -v ./assignments/...
+        run: go build -v -o assignments assignment/cmd/main.go
       
       - name: Upload To Github Release
-        uses: xresloader/upload-to-github-release@v1.3.9
+        uses: xresloader/upload-to-github-release@v1.3.12
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           # The files or file patterns to upload. You can upload multiple files by split them by semicolon. You can use the glob pattern to find the files.
-          file: main
+          file: assignments
           # The files or file patterns to delete before uploading new files. You can delete multiple files by split them by semicolon. You can use the glob pattern to find the files.
           # delete_file: # optional, default is 
           # If you need to overwrite existing files, add overwrite: true to the with.
