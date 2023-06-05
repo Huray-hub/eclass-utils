@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -9,6 +10,19 @@ import (
 
 	"github.com/pkg/errors"
 )
+
+var (
+	ErrNoCredentials      = errors.New("credentials not provided")
+	ErrInvalidCredentials = errors.New("invalid credentials")
+)
+
+type ErrInvalidDomain struct {
+	DomainURL string
+}
+
+func (e *ErrInvalidDomain) Error() string {
+	return fmt.Sprintf("invalid domain URL: %s", e.DomainURL)
+}
 
 // Login function authenticates user to eclass and stores session to the client provided.
 // After successful login, returns the http.Client.
@@ -19,11 +33,13 @@ func Login(
 	client *http.Client,
 ) (*http.Client, error) {
 	if domainURL == "" || !strings.Contains(domainURL, "https://eclass") {
-		return nil, errors.Errorf("invalid domain url: %s", domainURL)
+		return nil, &ErrInvalidDomain{
+			DomainURL: domainURL,
+		}
 	}
 
 	if creds.UsernameEmpty() || creds.PasswordEmpty() {
-		return nil, errors.Errorf("invalid credentials")
+		return nil, ErrNoCredentials
 	}
 
 	if client == nil {
@@ -104,7 +120,7 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return errors.Errorf("could not login; status code %v", res.StatusCode)
+		return errors.Errorf("could not login; status code %d", res.StatusCode)
 	}
 
 	sidAfter, err := sessionID(parsedURL, client)
@@ -113,7 +129,7 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 	}
 
 	if sidBefore == sidAfter {
-		return errors.New("could not login; invalid credentials")
+		return ErrInvalidCredentials
 	}
 
 	return nil
