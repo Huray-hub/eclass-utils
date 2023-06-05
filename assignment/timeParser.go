@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const narrowNoBreakSpace = "\u202f"
+
 var dayNamesGR = map[string]string{
 	"Δευτέρα":   "Monday",
 	"Τρίτη":     "Tuesday",
@@ -37,15 +39,16 @@ var periodsGR = map[string]string{
 	"μ.μ.": "pm",
 }
 
-func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
-	var timePrepositions = map[string]int{
-		"προχθές":  -2,
-		"χθες":     -1,
-		"σήμερα":   0,
-		"αύριο":    1,
-		"μεθαύριο": 2,
-	}
+var timePrepositions = map[string]int{
+	"προχθές":  -2,
+	"χθες":     -1,
+	"σήμερα":   0,
+	"αύριο":    1,
+	"μεθαύριο": 2,
+}
 
+func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
+	dateRaw = strings.Replace(dateRaw, narrowNoBreakSpace, " ", 1)
 	firstWord := strings.Split(dateRaw, " ")[0]
 
 	if v, ok := timePrepositions[firstWord]; ok {
