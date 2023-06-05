@@ -23,7 +23,7 @@ func TestExport(t *testing.T) {
 		{
 			ID:     "24692",
 			Course: course,
-			Deadline: func(location *time.Location) time.Time {
+			Deadline: func(location *time.Location) *time.Time {
 				var deadline time.Time
 				deadline, err = time.ParseInLocation(
 					"02-01-2006 15:04:05",
@@ -33,7 +33,7 @@ func TestExport(t *testing.T) {
 				if err != nil {
 					t.Error("cannot parse string to local deadline")
 				}
-				return deadline
+				return &deadline
 			}(location),
 			IsSent: false,
 			Title:  "Άσκηση 1 (τμήματα Τετάρτης)",
@@ -41,7 +41,7 @@ func TestExport(t *testing.T) {
 		{
 			ID:     "15207",
 			Course: course,
-			Deadline: func(location *time.Location) time.Time {
+			Deadline: func(location *time.Location) *time.Time {
 				var deadline time.Time
 				deadline, err = time.ParseInLocation(
 					"02-01-2006 15:04:05",
@@ -51,7 +51,7 @@ func TestExport(t *testing.T) {
 				if err != nil {
 					t.Error("cannot parse string to local deadline")
 				}
-				return deadline
+				return &deadline
 			}(location),
 			IsSent: false,
 			Title:  "Άσκηση 1 (τμήματα Δευτέρας)",

@@ -18,7 +18,7 @@ type Assignment struct {
 	ID       string
 	Course   *course.Course
 	Title    string
-	Deadline time.Time
+	Deadline *time.Time
 	IsSent   bool
 }
 
@@ -76,12 +76,16 @@ func parseID(td *goquery.Selection) (string, error) {
 	return id, nil
 }
 
-func parseDeadline(dl string, location *time.Location) (time.Time, error) {
+func parseDeadline(dl string, location *time.Location) (*time.Time, error) {
+	if dl == NoDeadline {
+		return nil, nil
+	}
+
 	t, err := parseTime(dl, location)
 	if err != nil {
-		return time.Time{}, err
+		return nil, err
 	}
-	return *t, nil
+	return t, nil
 }
 
 func parseIsSent(s *goquery.Selection) bool {
@@ -91,7 +95,13 @@ func parseIsSent(s *goquery.Selection) bool {
 // SortByDeadline function sorts assignments by descending deadline
 func SortByDeadline(a []Assignment) {
 	sort.Slice(a, func(i, j int) bool {
-		return a[i].Deadline.Before(a[j].Deadline)
+		if a[i].Deadline == nil {
+			return false
+		}
+		if a[j].Deadline == nil {
+			return true
+		}
+		return a[i].Deadline.Before(*a[j].Deadline)
 	})
 }
 
@@ -116,7 +126,7 @@ func (a Assignment) IsExcluded(
 	courseID string,
 	location *time.Location,
 ) bool {
-	if !opts.IncludeExpired && a.Deadline.Before(time.Now().In(location)) {
+	if !opts.IncludeExpired && a.Deadline != nil && a.Deadline.Before(time.Now().In(location)) {
 		return true
 	}
 

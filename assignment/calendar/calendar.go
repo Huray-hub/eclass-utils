@@ -64,12 +64,15 @@ func createCalendar(
 }
 
 func addEvent(a as.Assignment, cal *ics.Calendar, baseDomain string) error {
+	if a.Deadline == nil {
+		return nil
+	}
 	event := cal.AddEvent(fmt.Sprintf("%v-%v-%v", "eclass-utils", a.Course.ID, a.ID))
 	event.SetCreatedTime(time.Now())
 	event.SetDtStampTime(time.Now())
 	event.SetModifiedAt(time.Now())
-	event.SetStartAt(a.Deadline)
-	event.SetEndAt(a.Deadline)
+	event.SetStartAt(*a.Deadline)
+	event.SetEndAt(*a.Deadline)
 	event.SetSummary(fmt.Sprintf("%v: %v", a.Course.Name, a.Title))
 
 	assignmentURL, err := a.PrepareURL(baseDomain)

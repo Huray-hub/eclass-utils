@@ -9,6 +9,8 @@ import (
 
 const narrowNoBreakSpace = "\u202f"
 
+const NoDeadline = "Χωρίς προθεσμία"
+
 var dayNamesGR = map[string]string{
 	"Δευτέρα":   "Monday",
 	"Τρίτη":     "Tuesday",
@@ -66,10 +68,7 @@ func parseNearTime(
 	days int,
 	location *time.Location,
 ) (*time.Time, error) {
-	dateOnly, err := parseNearDateOnly(days)
-	if err != nil {
-		return nil, err
-	}
+	dateOnly := time.Now().AddDate(0, 0, days)
 
 	timeOnly, err := parseTimeOnly(nearDate)
 	if err != nil {
@@ -88,12 +87,6 @@ func parseNearTime(
 	)
 
 	return &fullTime, nil
-}
-
-func parseNearDateOnly(days int) (*time.Time, error) {
-	dateOnly := time.Now().AddDate(0, 0, days)
-
-	return &dateOnly, nil
 }
 
 func parseTimeOnly(timeRaw string) (*time.Time, error) {
@@ -133,14 +126,14 @@ func parseNormalDate(s string, location *time.Location) (*time.Time, error) {
 func translateTimeGrEn(dt string) string {
 	parts := strings.Split(dt, " ")
 
-	dayGR := &parts[0]
-	dt = strings.Replace(dt, *dayGR, dayNamesGR[*dayGR], 1)
+	dayGR := parts[0]
+	dt = strings.Replace(dt, dayGR, dayNamesGR[dayGR], 1)
 
-	monthGR := &parts[2]
-	dt = strings.Replace(dt, *monthGR, monthNamesGenitiveGR[*monthGR], 1)
+	monthGR := parts[2]
+	dt = strings.Replace(dt, monthGR, monthNamesGenitiveGR[monthGR], 1)
 
-	periodGR := &parts[6]
-	dt = strings.Replace(dt, *periodGR, periodsGR[*periodGR], 1)
+	periodGR := parts[6]
+	dt = strings.Replace(dt, periodGR, periodsGR[periodGR], 1)
 
 	return dt
 }

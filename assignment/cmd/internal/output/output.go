@@ -47,25 +47,32 @@ func printAssignmentsPretty(assignments []assignment.Assignment) error {
 }
 
 func appendToTable(assignments []assignment.Assignment, table *tablewriter.Table) {
-	for _, asgmt := range assignments {
-		remainingTime(asgmt)
+	for _, asg := range assignments {
 		var isSent string
-		if asgmt.IsSent {
+		if asg.IsSent {
 			isSent = "✓"
 		} else {
 			isSent = "✗"
 		}
+
+		var deadlineMsg string
+		if asg.Deadline == nil {
+			deadlineMsg = assignment.NoDeadline
+		} else {
+			deadlineMsg = asg.Deadline.Format("02/01/2006 15:04") + " " + remainingTime(asg)
+		}
+
 		table.Append([]string{
-			asgmt.Course.Name,
-			asgmt.Title,
-			asgmt.Deadline.Format("02/01/2006 15:04") + " " + remainingTime(asgmt),
+			asg.Course.Name,
+			asg.Title,
+			deadlineMsg,
 			isSent,
 		})
 	}
 }
 
-func remainingTime(assignment assignment.Assignment) string {
-	t := time.Until(assignment.Deadline)
+func remainingTime(asg assignment.Assignment) string {
+	t := time.Until(*asg.Deadline)
 
 	switch {
 	case t < 0:
