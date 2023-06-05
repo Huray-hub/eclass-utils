@@ -23,13 +23,20 @@ type Assignment struct {
 }
 
 func (a *Assignment) String() string {
+	var deadlineMsg string
+	if a.Deadline == nil {
+		deadlineMsg = NoDeadline
+	} else {
+		deadlineMsg =  a.Deadline.Format("02/01/2006 15:04")
+	}
+
 	return fmt.Sprintf(
 		"%v,%v,%v,%v,%v,%v",
 		a.Course.ID,
 		a.Course.Name,
 		a.ID,
 		a.Title,
-		a.Deadline.Format("02/01/2006 15:04"),
+		deadlineMsg,
 		a.IsSent,
 	)
 }
