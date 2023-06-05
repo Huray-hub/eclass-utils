@@ -81,11 +81,35 @@ func Ensure(cfg *Config) error {
 			return err
 		}
 
-		err = createConfig(path, *cfg)
+		err = Export(path, *cfg, true)
 		if err != nil {
 			return err
 		}
 	}
+	return nil
+}
+
+// Export function creates a config.yaml file at the specified path using the config
+// struct provided.
+func Export(configPath string, config Config, parents bool) error {
+	if parents {
+		err := os.MkdirAll(filepath.Dir(configPath), 0755)
+		if err != nil {
+			return err
+		}
+
+	}
+
+	yamlFile, err := yaml.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(configPath, yamlFile, 0644)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -170,7 +194,7 @@ func inputStdin(value *string, message string) error {
 
 func inputPasswordStdin(password *string) error {
 	fmt.Print("Password: ")
-	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	bytePassword, err := term.ReadPassword(syscall.Stdin)
 	if err != nil {
 		return err
 	}
@@ -190,26 +214,7 @@ func defaultPath() (string, error) {
 
 func ensurePath(path string) error {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		return createConfig(path, newDefault())
-	}
-
-	return nil
-}
-
-func createConfig(configPath string, config Config) error {
-	err := os.MkdirAll(filepath.Dir(configPath), 0755)
-	if err != nil {
-		return err
-	}
-
-	yamlFile, err := yaml.Marshal(config)
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(configPath, yamlFile, 0644)
-	if err != nil {
-		return err
+		return Export(path, newDefault(), true)
 	}
 
 	return nil
