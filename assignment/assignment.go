@@ -11,7 +11,7 @@ import (
 	"github.com/Huray-hub/eclass-utils/assignment/config"
 	"github.com/Huray-hub/eclass-utils/course"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/pkg/errors"
+	"errors"
 )
 
 type Assignment struct {
@@ -77,7 +77,7 @@ func parseID(td *goquery.Selection) (string, error) {
 
 	id := uriValues.Get("id")
 	if _, err := strconv.Atoi(id); err != nil {
-		return "", errors.Errorf("ID: %v is not a valid string", id)
+		return "", fmt.Errorf("ID: %v is not a valid string", id)
 	}
 
 	return id, nil
