@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/pkg/errors"
+	"errors"
 )
 
 var (
@@ -54,18 +54,18 @@ func Login(
 		var err error
 		client.Jar, err = cookiejar.New(nil)
 		if err != nil {
-			return nil, errors.Errorf("could not create new cookiejar, error: %v", err)
+			return nil, fmt.Errorf("could not create new cookiejar, error: %w", err)
 		}
 	}
 
 	err := headHomepage(ctx, domainURL, client)
 	if err != nil {
-		return nil, errors.Errorf("could not head homepage, error: %v", err)
+		return nil, fmt.Errorf("could not head homepage, error: %w", err)
 	}
 
 	err = postLogin(ctx, domainURL, creds, client)
 	if err != nil {
-		return nil, errors.Errorf("could not login, error: %v", err)
+		return nil, fmt.Errorf("could not login, error: %w", err)
 	}
 
 	return client, nil
@@ -120,7 +120,7 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return errors.Errorf("could not login; status code %d", res.StatusCode)
+		return fmt.Errorf("could not login; status code %d", res.StatusCode)
 	}
 
 	sidAfter, err := sessionID(parsedURL, client)

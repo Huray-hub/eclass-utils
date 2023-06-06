@@ -2,6 +2,7 @@ package auth_test
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"net/http/cookiejar"
 	"testing"
@@ -84,5 +85,8 @@ func TestLogin_BadCreds(t *testing.T) {
 	_, err = auth.Login(context.Background(), domainURL, creds, client)
 	if err == nil {
 		t.Errorf("should be unauthorized: %v", err)
+	}
+	if !errors.Is(errors.Unwrap(err), auth.ErrInvalidCredentials) {
+		t.Errorf("error should be ErrInvalidCredentials: %v", err)
 	}
 }
