@@ -86,7 +86,7 @@ func TestLogin_BadCreds(t *testing.T) {
 	if err == nil {
 		t.Errorf("should be unauthorized: %v", err)
 	}
-	if !errors.Is(errors.Unwrap(err), auth.ErrInvalidCredentials) {
+	if !errors.Is(err, auth.ErrInvalidCredentials) {
 		t.Errorf("error should be ErrInvalidCredentials: %v", err)
 	}
 }
