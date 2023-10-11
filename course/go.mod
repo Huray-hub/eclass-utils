@@ -12,8 +12,8 @@ require (
 	github.com/Huray-hub/eclass-utils/authentication v0.0.0-20230228204259-d4dece8990ee // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/term v0.5.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
