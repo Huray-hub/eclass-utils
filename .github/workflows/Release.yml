@@ -63,4 +63,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         with:
-         asset_paths: '["assignments-darwin-arm64.zip", "assignments-darwin-amd64.zip", "assignments-linux-amd64.zip", "assignments-windows-amd64.zip"]'
+         asset_paths: '["./assignments-*.zip"]'
