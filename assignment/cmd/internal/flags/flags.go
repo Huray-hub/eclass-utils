@@ -22,6 +22,12 @@ func Read(cfg *config.Config) {
 		"Include expired assignments",
 	)
 	flag.BoolVar(&cfg.Options.ExportICS, "c", cfg.Options.ExportICS, "Export calendar file")
+	flag.BoolVar(
+		&cfg.Options.OnlyFavoriteCourses,
+		"f",
+		cfg.Options.OnlyFavoriteCourses,
+		"Only courses bookmarked as 'favorites'",
+	)
 	baseDomain := flag.String(
 		"d",
 		"",
@@ -44,7 +50,7 @@ Use course ID and a part of the assignment's title to ignore it from results
 
 	flag.Parse()
 
-	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments,&cfg.Options)
+	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments, &cfg.Options)
 	flagsToCredentials(*username, *password, &cfg.Credentials)
 }
 

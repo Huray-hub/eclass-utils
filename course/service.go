@@ -8,8 +8,9 @@ import (
 )
 
 type Options struct {
-	BaseDomain      string              `yaml:"baseDomain"`
-	ExcludedCourses map[string]struct{} `yaml:"excludedCourses"`
+	BaseDomain          string              `yaml:"baseDomain"`
+	OnlyFavoriteCourses bool                `yaml:"onlyFavoriteCourses"`
+	ExcludedCourses     map[string]struct{} `yaml:"excludedCourses"`
 }
 
 // TODO: this implementation is not autonomous and needs revisit
@@ -40,19 +41,20 @@ func GetEnrolled(ctx context.Context, opts Options, client *http.Client) ([]Cour
 		return nil, err
 	}
 
-	// The max number of courses per semester is 7. Till half the semester students expect 
+	// The max number of courses per semester is 7. Till half the semester students expect
 	// courses' grades from previous semester's exam, so they are enrolled to maximum 14
 	// courses in total
 	courses := make([]Course, 0, 14)
 
-	doc.Find("#main-content table.table-default tbody tr td:first-child a").
+	doc.Find("#main-content table.table-default tbody tr").
 		Each(func(_ int, s *goquery.Selection) {
-			name := s.Text()
+			firsttd := s.Find("td:first-child a")
 
-			href, _ := s.Attr("href")
+			name := firsttd.Text()
+			href, _ := firsttd.Attr("href")
+			isFavorite := s.Find("td:nth-child(2) a:first-child span").HasClass("fa-star")
 
-			course := newCourse(name, href)
-
+			course := newCourse(name, href, isFavorite)
 			if course.IsExcluded(opts) {
 				return
 			}

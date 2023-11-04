@@ -10,6 +10,9 @@ are the following options for convenience:
 - **Inclusion of expired assignments**: usually there are expired assignments from previous years.
 (default = false)
 
+- Include only favortie courses: fetch only courses marked as 'favorites'. 
+(default = false)
+
 - **Exclusion of selected courses**: there are courses that do not have assignments.
 (default = empty)
 

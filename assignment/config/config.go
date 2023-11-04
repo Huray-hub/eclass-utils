@@ -152,7 +152,7 @@ func ensureCredentials(creds *auth.Credentials) (bool, error) {
 			return false, err
 		}
 
-		if decision == "yes" || decision == "y" {
+		if decision == "yes" || decision == "y" || decision == "Y" {
 			return true, err
 		}
 	}
@@ -232,7 +232,8 @@ func newDefault() Config {
 			ExportICS:           false,
 			ExcludedAssignments: map[string][]string{},
 			Options: course.Options{
-				ExcludedCourses: map[string]struct{}{},
+				OnlyFavoriteCourses: false,
+				ExcludedCourses:     map[string]struct{}{},
 			},
 		},
 	}

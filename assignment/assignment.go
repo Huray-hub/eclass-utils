@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"errors"
 	"github.com/Huray-hub/eclass-utils/assignment/config"
 	"github.com/Huray-hub/eclass-utils/course"
 	"github.com/PuerkitoBio/goquery"
-	"errors"
 )
 
 type Assignment struct {
@@ -27,7 +27,7 @@ func (a *Assignment) String() string {
 	if a.Deadline == nil {
 		deadlineMsg = NoDeadline
 	} else {
-		deadlineMsg =  a.Deadline.Format("02/01/2006 15:04")
+		deadlineMsg = a.Deadline.Format("02/01/2006 15:04")
 	}
 
 	return fmt.Sprintf(

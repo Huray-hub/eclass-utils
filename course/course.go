@@ -8,16 +8,18 @@ import (
 )
 
 type Course struct {
-	ID   string
-	Name string
-	URL  string
+	ID       string
+	Name     string
+	URL      string
+	Favorite bool
 }
 
-func newCourse(name, url string) Course {
+func newCourse(name, url string, favorite bool) Course {
 	return Course{
-		ID:   extractID(url),
-		Name: strings.TrimSpace(name),
-		URL:  url,
+		ID:       extractID(url),
+		Name:     strings.TrimSpace(name),
+		URL:      url,
+		Favorite: favorite,
 	}
 }
 
@@ -27,9 +29,14 @@ func (crs Course) String() string {
 
 // IsExcluded method determines based on options if course should be excluded from final result
 func (crs Course) IsExcluded(opts Options) bool {
+	if opts.OnlyFavoriteCourses && !crs.Favorite {
+		return true
+	}
+
 	if _, ok := opts.ExcludedCourses[crs.ID]; ok {
 		return true
 	}
+
 	return false
 }
 

@@ -13,7 +13,7 @@ import (
 )
 
 type Service struct {
-	opts   config.Options
+	opts     config.Options
 	location *time.Location
 	client   *http.Client
 }
@@ -34,7 +34,7 @@ func NewService(
 	}
 
 	return &Service{
-		opts:   cfg.Options,
+		opts:     cfg.Options,
 		location: location,
 		client:   client,
 	}, nil
