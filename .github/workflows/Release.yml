@@ -54,14 +54,13 @@ jobs:
       - name: Display downloaded files
         run: ls -R
        
-      # - uses: actions/checkout@v4
-      #   with:
-      #     fetch-depth: 1
-      # - name: Upload release binaries
-      #   uses: alexellis/upload-assets@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   with:
-      #     asset_paths: '["./bin/release-it*"]'
-#          asset_paths: '["./bin/release-it-darwin", "./bin/release-it-amd64", "./bin/release-it-arm", "./bin/release-it-arm64", "./bin/release-it.exe"]'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@master
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        with:
+         asset_paths: '["assignmetns-darwin-arm64", "assignments-darwin-amd64", "assignments-linux-amd64", "assignments-windows-amd64.exe"]'
 
