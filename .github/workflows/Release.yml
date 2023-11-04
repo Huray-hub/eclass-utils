@@ -28,7 +28,7 @@ jobs:
         run: |
           OUTPUT_NAME=assignments-${{ matrix.goos }}-${{ matrix.goarch }}
           if [ "${{ matrix.goos }}" = "windows" ]; then OUTPUT_NAME+='.exe'; fi
-          env GOOS=${{ matrix.goos }} GOARCH={{ matrix.goarch }} go build -o $OUTPUT_NAME ./assignment/cmd/main.go
+          env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o $OUTPUT_NAME ./assignment/cmd/main.go
 
       - name: Zip the executables
         run: |
