@@ -84,7 +84,12 @@ func main() {
 	}
 
 	if opts.ExportICS {
-		path, err := calendar.Export(assignments, opts.BaseDomain)
+		workingDirectory, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		path, err := calendar.Export(assignments, opts.BaseDomain, workingDirectory)
 		if err != nil {
 			log.Fatal(err)
 		}

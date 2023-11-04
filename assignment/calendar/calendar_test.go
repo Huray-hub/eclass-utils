@@ -1,6 +1,8 @@
 package calendar_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -10,13 +12,12 @@ import (
 )
 
 func TestExport(t *testing.T) {
-	t.Skip("currently I use this only as a shorcut to my workflow")
 	// Arrange
 	baseDomain := "eclass.uniwa.gr"
 	course := &course.Course{ID: "ICE262", Name: "ΑΝΑΚΤΗΣΗ ΠΛΗΡΟΦΟΡΙΑΣ"}
 	location, err := time.LoadLocation("Europe/Athens")
 	if err != nil {
-		t.Fatal(err.Error())
+		t.Fatalf("arrange phase - %s", err)
 	}
 
 	assignments := [2]assignment.Assignment{
@@ -31,7 +32,7 @@ func TestExport(t *testing.T) {
 					location,
 				)
 				if err != nil {
-					t.Error("cannot parse string to local deadline")
+					t.Fatalf("arrange phase - cannot parse string to local deadline: %s", err)
 				}
 				return &deadline
 			}(location),
@@ -49,7 +50,7 @@ func TestExport(t *testing.T) {
 					location,
 				)
 				if err != nil {
-					t.Error("cannot parse string to local deadline")
+					t.Fatalf("arrange phase - cannot parse string to local deadline: %s", err)
 				}
 				return &deadline
 			}(location),
@@ -58,15 +59,23 @@ func TestExport(t *testing.T) {
 		},
 	}
 
-	// Act
-	res, err := calendar.Export(assignments[:], baseDomain)
+	tempDir := t.TempDir()
 
+	expectedICSFileName := fmt.Sprintf("assignments_%s.ics", time.Now().Format("01-02-2006"))
+
+	// Act
+	filePath, err := calendar.Export(assignments[:], baseDomain, tempDir)
 	// Assert
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Fatal(err)
 	}
 
-	if res == "" {
-		t.Errorf("Empty result\n")
+	if filePath == "" {
+		t.Fatal("empty filePath")
+	}
+
+	actualICSFileName, _ := strings.CutPrefix(filePath, tempDir)
+	if expectedICSFileName == actualICSFileName {
+		t.Fatalf("expected: %s, actual: %s", expectedICSFileName, actualICSFileName)
 	}
 }

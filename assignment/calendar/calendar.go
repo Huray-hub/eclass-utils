@@ -11,29 +11,24 @@ import (
 	ics "github.com/arran4/golang-ical"
 )
 
-func Export(a []as.Assignment, baseDomain string) (string, error) {
-	buffer, err := createCalendar(a, baseDomain)
+func Export(a []as.Assignment, baseDomain, targetDirectory string) (filePath string, err error) {
+	var buffer *bytes.Buffer
+	buffer, err = createCalendar(a, baseDomain)
 	if err != nil {
-		return "", err
+		return
 	}
 
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-
-	t := time.Now()
-	path := filepath.Join(
-		workingDirectory,
-		fmt.Sprintf("assignments_%v%v%v.ics", t.Day(), int(t.Month()), t.Year()),
+	filePath = filepath.Join(
+		targetDirectory,
+		fmt.Sprintf("assignments_%s.ics", time.Now().Format("02-01-2006")),
 	)
 
-	err = os.WriteFile(path, buffer.Bytes(), 0644)
+	err = os.WriteFile(filePath, buffer.Bytes(), 0644)
 	if err != nil {
-		return "", err
+		return
 	}
 
-	return path, nil
+	return
 }
 
 func createCalendar(
