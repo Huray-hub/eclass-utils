@@ -1,6 +1,6 @@
 module github.com/Huray-hub/eclass-utils/assignment
 
-go 1.20
+go 1.21
 
 require (
 	github.com/Huray-hub/eclass-utils/auth v0.0.0-20231103141912-cff47671678c

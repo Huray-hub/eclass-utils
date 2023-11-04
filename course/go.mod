@@ -1,6 +1,6 @@
 module github.com/Huray-hub/eclass-utils/course
 
-go 1.20
+go 1.21
 
 require (
 	github.com/Huray-hub/eclass-utils/assignment v0.0.0-20231103141912-cff47671678c

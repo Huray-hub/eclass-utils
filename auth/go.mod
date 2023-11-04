@@ -1,3 +1,3 @@
 module github.com/Huray-hub/eclass-utils/auth
 
-go 1.20
+go 1.21
