@@ -34,7 +34,7 @@ jobs:
         run: |
           EXECUTABLE_NAME=assignments-${{ matrix.goos }}-${{ matrix.goarch }}
           if [ "${{ matrix.goos }}" = "windows" ]; then EXECUTABLE_NAME+='.exe'; fi
-          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip $EXECUTABLE-NAME
+          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip $EXECUTABLE_NAME
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -62,5 +62,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         with:
-         asset_paths: '["assignmetns-darwin-arm64", "assignments-darwin-amd64", "assignments-linux-amd64", "assignments-windows-amd64.exe"]'
+         asset_paths: '["assignments-darwin-arm64", "assignments-darwin-amd64", "assignments-linux-amd64", "assignments-windows-amd64.exe"]'
 
