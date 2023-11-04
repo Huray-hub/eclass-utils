@@ -55,12 +55,12 @@ jobs:
       - name: Display downloaded files
         run: ls -R
        
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+      # - uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 1
       - name: Upload release binaries
         uses: alexellis/upload-assets@master
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         with:
-         asset_paths: '["./assignments-*.zip"]'
+         asset_paths: '["./assignments-linux-amd64.zip", "./assignments-windows-amd64.zip", "./assignments-darwin-amd64.zip", "./assignments-darwin-arm64.zip"]'
