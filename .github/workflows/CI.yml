@@ -4,15 +4,15 @@ on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - README.md
-      - .github
-      - .git
+      - 'README.md'
+      - '.github*'
+      - '.git*'
   pull_request: 
     branches: [ "main" ]
     paths-ignore:
-      - README.md
-      - .github
-      - .git
+      - 'README.md'
+      - '.github*'
+      - '.git*'
 jobs:
   lint:
     runs-on: ubuntu-latest  
