@@ -1,4 +1,4 @@
-package auth_test
+package examples
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/Huray-hub/eclass-utils/auth"
 )
 
-func ExampleLogin_withClient() {
+func ExampleLoginWithClient() {
 	// Your credentials
 	creds := auth.Credentials{
 		Username: "your eclass username",
@@ -43,7 +43,7 @@ func ExampleLogin_withClient() {
 	}
 }
 
-func ExampleLogin_noClient() {
+func ExampleLoginNoClient() {
 	// Your credentials
 	creds := auth.Credentials{
 		Username: "your-username",

@@ -1,4 +1,5 @@
-package auth_test
+package examples
+
 
 import (
 	"context"
@@ -7,6 +8,7 @@ import (
 	"github.com/Huray-hub/eclass-utils/auth"
 )
 
+// TODO: organize use cases
 func ExampleSession() {
 	// Your credentials
 	creds := auth.Credentials{
