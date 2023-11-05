@@ -20,12 +20,12 @@ help:
 # Build target
 .PHONY: build-assignments
 build-assignments:
-	go build -v -o $(BUILD_DIR)/$(EXECUTABLE_NAME) ./assignment/cmd/main.go
+	go build -v -o $(BUILD_DIR)/$(EXECUTABLE_NAME) ./assignment/cmd/assignments/main.go
 
 # Run target
 .PHONY: run-assignments
 run-assignments:
-	go run ./assignment/cmd/main.go
+	go run ./assignment/cmd/assignments/main.go
 
 # Install target
 .PHONY: install-assignments

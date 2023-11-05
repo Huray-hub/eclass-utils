@@ -12,8 +12,8 @@ import (
 
 	"github.com/Huray-hub/eclass-utils/assignment"
 	"github.com/Huray-hub/eclass-utils/assignment/calendar"
-	"github.com/Huray-hub/eclass-utils/assignment/cmd/internal/flags"
-	"github.com/Huray-hub/eclass-utils/assignment/cmd/internal/output"
+	"github.com/Huray-hub/eclass-utils/assignment/cmd/assignments/internal/flags"
+	"github.com/Huray-hub/eclass-utils/assignment/cmd/assignments/internal/output"
 	"github.com/Huray-hub/eclass-utils/assignment/config"
 )
 
