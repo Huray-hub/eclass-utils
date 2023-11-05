@@ -31,13 +31,15 @@ run-assignments:
 .PHONY: install-assignments
 install-assignments: build-assignments
 	install -D $(BUILD_DIR)/$(EXECUTABLE_NAME) $(PREFIX)/$(EXECUTABLE_NAME)
-
+	rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
 # Install local target
 .PHONY: install-assignments-local
 install-assignments-local: build-assignments
 	install -D $(BUILD_DIR)/$(EXECUTABLE_NAME) ~/.local/bin/$(EXECUTABLE_NAME)
+	rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
 
 # Install GOPATH target
 .PHONY: install-assignments-gopath
 install-assignments-gopath: build-assignments
 	install -D $(BUILD_DIR)/$(EXECUTABLE_NAME) $(GOPATH)/bin/$(EXECUTABLE_NAME)
+	rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
