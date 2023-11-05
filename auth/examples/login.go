@@ -2,10 +2,8 @@ package examples
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"net/http/cookiejar"
-	"testing"
 
 	"github.com/Huray-hub/eclass-utils/auth"
 )
@@ -66,27 +64,27 @@ func ExampleLoginNoClient() {
 	}
 }
 
-func TestLogin_BadCreds(t *testing.T) {
-	creds := auth.Credentials{
-		Username: "your eclass username",
-		Password: "your eclass password",
-	}
-
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return
-	}
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	domainURL := "https://eclass.uniwa.gr"
-
-	_, err = auth.Login(context.Background(), domainURL, creds, client)
-	if err == nil {
-		t.Errorf("should be unauthorized: %v", err)
-	}
-	if !errors.Is(err, auth.ErrInvalidCredentials) {
-		t.Errorf("error should be ErrInvalidCredentials: %v", err)
-	}
-}
+// func TestLogin_BadCreds(t *testing.T) {
+// 	creds := auth.Credentials{
+// 		Username: "your eclass username",
+// 		Password: "your eclass password",
+// 	}
+//
+// 	jar, err := cookiejar.New(nil)
+// 	if err != nil {
+// 		return
+// 	}
+// 	client := &http.Client{
+// 		Jar: jar,
+// 	}
+//
+// 	domainURL := "https://eclass.uniwa.gr"
+//
+// 	_, err = auth.Login(context.Background(), domainURL, creds, client)
+// 	if err == nil {
+// 		t.Errorf("should be unauthorized: %v", err)
+// 	}
+// 	if !errors.Is(err, auth.ErrInvalidCredentials) {
+// 		t.Errorf("error should be ErrInvalidCredentials: %v", err)
+// 	}
+// }

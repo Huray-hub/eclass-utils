@@ -1,6 +1,5 @@
 package examples
 
-
 import (
 	"context"
 	"time"
