@@ -4,11 +4,11 @@ E-class utils is a set of tools for accessing various data from the Greek govern
 
 ## Modules
 
-### Assignments
+- [Assignments](https://github.com/Huray-hub/eclass-utils/tree/main/assignment#assignments)
 Fetches all the assignments from the enrolled courses, sorted by deadline.
 
-### Authentication
-Provides authentication session for Greek government's e-class platform
+- [Authentication](https://github.com/Huray-hub/eclass-utils/tree/main/auth)
+Provides an authenticated session.
 
-### Course
-Provides course utilities for Greek government's e-class platform
+- [Course](https://github.com/Huray-hub/eclass-utils/tree/main/course)
+Provides course utilities.

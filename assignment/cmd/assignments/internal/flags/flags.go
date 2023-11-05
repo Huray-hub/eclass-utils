@@ -47,7 +47,7 @@ func Read(cfg *config.Config) (modifiedCreds bool) {
 Use course ID and a part of the assignment's title to ignore it from results
 (ex. -a=ICE262:"τμήματα Tετάρτης,τμήματα Παρασκευής"_CS152:...)`)
 
-	updateCredentials := flag.Bool("u", false, "udpate your college credentials in config file")
+	updateCredentials := flag.Bool("u", false, "update your college credentials in config file")
 
 	username := flag.String("username", "", "Your e-class username")
 	password := flag.String("password", "", "Your e-class password")
