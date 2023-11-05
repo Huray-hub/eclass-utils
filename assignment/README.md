@@ -32,14 +32,16 @@ Prints the assignments of your enrolled courses to the terminal. These are the f
 ```sh
 go install github.com/Huray-hub/eclass-utils/assignment/cmd/assignments@latest
 ```
-2. Build from source requires [Go](https://go.dev).
+2. Build from source (requires [Go](https://go.dev)).
 - clone repo
 - cd into the repo 
-- run
+- install
 ```sh
-make install-assignments-local
-# or 
-make install-assignments-gopath
+go install ./assignment/cmd/assignments
+```
+- run 
+```sh
+assignments
 ```
 
 ## Configuration
