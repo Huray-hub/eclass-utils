@@ -46,4 +46,4 @@ jobs:
         run: go version
       - name: Cross-build assignments
         run: |
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o assignments-${{ matrix.goos }}-${{ matrix.goarch }} ./assignment/cmd/main.go
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o assignments-${{ matrix.goos }}-${{ matrix.goarch }} ./assignment/cmd/assignments/main.go

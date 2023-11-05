@@ -8,9 +8,9 @@ import (
 
 func TestImport(t *testing.T) {
 	t.Skip("currently I use this only as a shortcut to my workflow")
-	//Arrange
+	// Arrange
 
-	//Act
+	// Act
 	cfg, err := config.ImportDefault()
 	if err != nil {
 		t.Fatalf("failed")
@@ -24,5 +24,5 @@ func TestImport(t *testing.T) {
 		t.Fatalf("falied to import")
 	}
 
-	//Assert
+	// Assert
 }

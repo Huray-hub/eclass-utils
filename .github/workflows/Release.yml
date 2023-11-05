@@ -25,17 +25,12 @@ jobs:
       - name: Display Go version
         run: go version
         
-      - name: Cross-build assignments
+      - name: Cross-Compile assignments and zip executables
         run: |
-          OUTPUT_NAME=assignments-${{ matrix.goos }}-${{ matrix.goarch }}
+          OUTPUT_NAME=assignments
           if [ "${{ matrix.goos }}" = "windows" ]; then OUTPUT_NAME+='.exe'; fi
-          env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o $OUTPUT_NAME ./assignment/cmd/main.go
-
-      - name: Zip the executables
-        run: |
-          EXECUTABLE_NAME=assignments-${{ matrix.goos }}-${{ matrix.goarch }}
-          if [ "${{ matrix.goos }}" = "windows" ]; then EXECUTABLE_NAME+='.exe'; fi
-          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip $EXECUTABLE_NAME
+          env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o $OUTPUT_NAME ./assignment/cmd/assignments/main.go 
+          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip assignments
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
