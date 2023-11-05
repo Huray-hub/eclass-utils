@@ -42,6 +42,10 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: 1.21
+          cache-dependency-path: |
+             assignment/go.sum
+             auth/go.sum
+             course/go.sum
       - name: Display Go version
         run: go version
       - name: Cross-build assignments
