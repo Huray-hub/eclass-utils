@@ -8,7 +8,9 @@ import (
 	"github.com/Huray-hub/eclass-utils/auth"
 )
 
-func Read(cfg *config.Config) {
+// Read function parses command-line args given & maps them to the config, overriding its previous
+// state. If new credentials' information provided, modifiedCreds is set to true
+func Read(cfg *config.Config) (modifiedCreds bool) {
 	flag.BoolVar(
 		&cfg.Options.PlainText,
 		"p",
@@ -51,7 +53,8 @@ Use course ID and a part of the assignment's title to ignore it from results
 	flag.Parse()
 
 	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments, &cfg.Options)
-	flagsToCredentials(*username, *password, &cfg.Credentials)
+	modifiedCreds = flagsToCredentials(*username, *password, &cfg.Credentials)
+	return
 }
 
 func flagsToOptions(
@@ -103,12 +106,19 @@ func parseExcludedAssignments(raw string) map[string][]string {
 	return res
 }
 
-func flagsToCredentials(username string, password string, creds *auth.Credentials) {
+func flagsToCredentials(
+	username string,
+	password string,
+	creds *auth.Credentials,
+) (modifiedCreds bool) {
 	if username != "" {
+		modifiedCreds = true
 		creds.Username = username
 	}
 
 	if password != "" {
+		modifiedCreds = true
 		creds.Password = password
 	}
+	return
 }

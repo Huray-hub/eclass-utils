@@ -2,13 +2,12 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
 	"strings"
-
-	"errors"
 )
 
 var (
@@ -54,18 +53,18 @@ func Login(
 		var err error
 		client.Jar, err = cookiejar.New(nil)
 		if err != nil {
-			return nil, fmt.Errorf("could not create new cookiejar, error: %w", err)
+			return nil, fmt.Errorf("could not create new cookiejar: %w", err)
 		}
 	}
 
 	err := headHomepage(ctx, domainURL, client)
 	if err != nil {
-		return nil, fmt.Errorf("could not head homepage, error: %w", err)
+		return nil, fmt.Errorf("could not head homepage: %w", err)
 	}
 
 	err = postLogin(ctx, domainURL, creds, client)
 	if err != nil {
-		return nil, fmt.Errorf("could not login, error: %w", err)
+		return nil, fmt.Errorf("could not login: %w", err)
 	}
 
 	return client, nil
@@ -120,7 +119,7 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 	}
 
 	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("could not login; status code %d", res.StatusCode)
+		return fmt.Errorf("could not login: status code %d", res.StatusCode)
 	}
 
 	sidAfter, err := sessionID(parsedURL, client)

@@ -15,6 +15,7 @@ import (
 	"github.com/Huray-hub/eclass-utils/assignment/cmd/assignments/internal/flags"
 	"github.com/Huray-hub/eclass-utils/assignment/cmd/assignments/internal/output"
 	"github.com/Huray-hub/eclass-utils/assignment/config"
+	"github.com/Huray-hub/eclass-utils/auth"
 )
 
 func init() {
@@ -60,7 +61,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	flags.Read(cfg)
+	modifiedCreds := flags.Read(cfg)
 
 	err = config.Ensure(cfg)
 	if err != nil {
@@ -69,6 +70,22 @@ func main() {
 
 	service, err := assignment.NewService(ctx, *cfg, nil)
 	if err != nil {
+		switch {
+		case errors.Is(auth.ErrNoCredentials, errors.Unwrap(err)):
+			fallthrough
+		case errors.Is(auth.ErrInvalidCredentials, errors.Unwrap(err)):
+			fmt.Println(err)
+			// clear credentials from config file only if were provided from stdin
+			if modifiedCreds {
+				log.Fatal(err)
+			}
+			cfg, err = config.ImportDefault()
+			if err != nil {
+				log.Fatalf("failed to clear wrong credentials from config: %s", err)
+			}
+			cfg.Credentials.ClearCredentials()
+			config.ExportDefault(*cfg, false)
+		}
 		log.Fatal(err)
 	}
 

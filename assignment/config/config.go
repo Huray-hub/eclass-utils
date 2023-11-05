@@ -89,8 +89,10 @@ func Ensure(cfg *Config) error {
 	return nil
 }
 
-// Export function creates a config.yaml file at the specified path using the config
+// Export function creates a config.yaml file at the specified config path using the config
 // struct provided.
+//
+// If parents is set to true, the given directory path will be created (if not existed)
 func Export(configPath string, config Config, parents bool) error {
 	if parents {
 		err := os.MkdirAll(filepath.Dir(configPath), 0755)
@@ -111,6 +113,19 @@ func Export(configPath string, config Config, parents bool) error {
 	}
 
 	return nil
+}
+
+// ExportDefault function creates a config.yaml file at the default path using the config
+// struct provided.
+//
+// If parents is set to true, the default directory path will be created (if not existed)
+func ExportDefault(config Config, parents bool) error {
+	configPath, err := defaultPath()
+	if err != nil {
+		return err
+	}
+
+	return Export(configPath, config, parents)
 }
 
 func ensureOptions(opts *Options) (bool, error) {
@@ -152,9 +167,11 @@ func ensureCredentials(creds *auth.Credentials) (bool, error) {
 			return false, err
 		}
 
-		if decision == "yes" || decision == "y" || decision == "Y" {
-			return true, err
+		switch decision {
+		case "yes", "y", "Y":
+			return true, nil
 		}
+
 	}
 
 	return false, nil
