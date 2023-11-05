@@ -17,6 +17,7 @@ import (
 type Config struct {
 	Credentials auth.Credentials `yaml:"credentials"`
 	Options     Options          `yaml:"options"`
+	SecretKey   string           `yaml:"secretKey"`
 }
 
 type Options struct {
@@ -43,6 +44,13 @@ func Import(configPath string) (*Config, error) {
 
 	cfg := new(Config)
 	err = yaml.Unmarshal(yamlFile, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	if !cfg.Credentials.PasswordEmpty() {
+		cfg.Credentials.Password, err = decrypt(cfg.Credentials.Password, cfg.SecretKey)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -100,6 +108,14 @@ func Export(configPath string, config Config, parents bool) error {
 			return err
 		}
 
+	}
+
+	if !config.Credentials.PasswordEmpty() {
+		var err error
+		config.Credentials.Password, err = encrypt(config.Credentials.Password, config.SecretKey)
+		if err != nil {
+			return err
+		}
 	}
 
 	yamlFile, err := yaml.Marshal(config)
@@ -231,13 +247,23 @@ func defaultPath() (string, error) {
 
 func ensurePath(path string) error {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		return Export(path, newDefault(), true)
+		config, err := newDefault()
+		if err != nil {
+			return err
+		}
+
+		return Export(path, config, true)
 	}
 
 	return nil
 }
 
-func newDefault() Config {
+func newDefault() (Config, error) {
+	secretKey, err := generateSecretKey()
+	if err != nil {
+		return Config{}, nil
+	}
+
 	return Config{
 		Credentials: auth.Credentials{
 			Username: "",
@@ -253,5 +279,6 @@ func newDefault() Config {
 				ExcludedCourses:     map[string]struct{}{},
 			},
 		},
-	}
+		SecretKey: secretKey,
+	}, nil
 }

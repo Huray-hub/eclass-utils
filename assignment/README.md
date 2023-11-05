@@ -28,6 +28,8 @@ are the following options for convenience:
 - **Manual add assignments**: Some professors put the assignments on other sections/platforms or nowhere at all. (TODO)
 (default = empty)
 
+
+
 ## Installation Options
 
 1. See releases for pre-built binaries.
@@ -56,6 +58,7 @@ After the installation, a yaml file will be stored in one of the following locat
 - Use -h for help
 TODO
 
+### Authentication
 
-## Disclaimers
-If you choose to cache college credentials during the installation, please make sure to not give read access to the config file. Currently, creds are be stored there. There was not much time to deal with OS secret API storages. In the future, probably will either store the credentials encrypted to the file or provide support for the secret storage. 
+College password can be cached, **encrypted** in the config file. It can't be update it manually from config file. 
+Use -h for help
