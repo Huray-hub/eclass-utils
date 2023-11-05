@@ -30,7 +30,7 @@ jobs:
           OUTPUT_NAME=assignments
           if [ "${{ matrix.goos }}" = "windows" ]; then OUTPUT_NAME+='.exe'; fi
           env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o $OUTPUT_NAME ./assignment/cmd/assignments/main.go 
-          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip assignments
+          zip assignments-${{ matrix.goos }}-${{ matrix.goarch }}.zip $OUTPUT_NAME
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
