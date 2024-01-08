@@ -6,11 +6,11 @@ require (
 	github.com/Huray-hub/eclass-utils/auth v0.0.0-20231104172856-c9261b5f173b
 	github.com/Huray-hub/eclass-utils/course v0.0.0-20231104172856-c9261b5f173b
 	github.com/arran4/golang-ical v0.2.3
-	golang.org/x/term v0.15.0
+	golang.org/x/term v0.16.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require golang.org/x/sys v0.15.0 // indirect
+require golang.org/x/sys v0.16.0 // indirect
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
