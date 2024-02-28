@@ -1,5 +1,7 @@
 github.com/Huray-hub/eclass-utils/auth v0.0.0-20240109121238-1411555362c3 h1:p8cBMFuGzfKYNKnm3bVs83lbMjRIf7Tx/lqnftj8egc=
 github.com/Huray-hub/eclass-utils/auth v0.0.0-20240109121238-1411555362c3/go.mod h1:Ys8k/OrYI1jkEgG5SRzHCmfW/1XIF2DLgN9DkyaK4xU=
+github.com/Huray-hub/eclass-utils/auth v0.0.0-20240228122413-deef0b54f49a h1:AptJqJ0iJDpAtLGKTk0K1aqsM959b4TO80pgtsss6mY=
+github.com/Huray-hub/eclass-utils/auth v0.0.0-20240228122413-deef0b54f49a/go.mod h1:Ys8k/OrYI1jkEgG5SRzHCmfW/1XIF2DLgN9DkyaK4xU=
 github.com/Huray-hub/eclass-utils/course v0.0.0-20231104172856-c9261b5f173b h1:M9fEG02Nmq1mk8H4iukIvd/4vESfEHx1oOIR1BSoOhc=
 github.com/Huray-hub/eclass-utils/course v0.0.0-20231104172856-c9261b5f173b/go.mod h1:RXYsRs6vydpe0a56b49hPovZ+h4sEKUHJUH/VAz7jzg=
 github.com/PuerkitoBio/goquery v1.8.1 h1:uQxhNlArOIdbrH1tr0UXwdVFgDcZDrZVdcpygAcwmWM=
