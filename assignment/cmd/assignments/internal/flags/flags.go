@@ -57,7 +57,7 @@ Use course ID and a part of the assignment's title to ignore it from results
 	flagsToOptions(*baseDomain, *excludedCourses, *excludedAssignments, &cfg.Options)
 
 	if updateCredentials != nil && *updateCredentials {
-		cfg.Credentials.ClearCredentials()
+		cfg.Credentials.Clear()
 		return
 	}
 

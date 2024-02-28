@@ -83,7 +83,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("failed to clear wrong credentials from config: %s", err)
 			}
-			cfg.Credentials.ClearCredentials()
+			cfg.Credentials.Clear()
 			err = config.ExportDefault(*cfg, false)
 			if err != nil {
 				return

@@ -1,6 +1,7 @@
 package assignment
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"sort"
@@ -8,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"errors"
 	"github.com/Huray-hub/eclass-utils/assignment/config"
 	"github.com/Huray-hub/eclass-utils/course"
 	"github.com/PuerkitoBio/goquery"
