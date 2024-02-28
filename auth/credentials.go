@@ -15,8 +15,8 @@ func (crd Credentials) PasswordEmpty() bool {
 	return crd.Password == ""
 }
 
-// ClearCredentials method clears both Username & Password values
-func (crd *Credentials) ClearCredentials() {
+// Clear method empties both Username & Password fields
+func (crd *Credentials) Clear() {
 	crd.Username = ""
 	crd.Password = ""
 }
