@@ -1,5 +1,7 @@
 go 1.21
 
 use ./assignment
+
 use ./auth
+
 use ./course

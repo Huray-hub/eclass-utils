@@ -1,5 +1,3 @@
-github.com/Huray-hub/eclass-utils/auth v0.0.0-20231104172856-c9261b5f173b h1:lnDra6WQ4DZGMn429PtrPglFkUSPQm+cdoazLMiWY9Q=
-github.com/Huray-hub/eclass-utils/auth v0.0.0-20231104172856-c9261b5f173b/go.mod h1:Ys8k/OrYI1jkEgG5SRzHCmfW/1XIF2DLgN9DkyaK4xU=
 github.com/Huray-hub/eclass-utils/auth v0.0.0-20240109121238-1411555362c3 h1:p8cBMFuGzfKYNKnm3bVs83lbMjRIf7Tx/lqnftj8egc=
 github.com/Huray-hub/eclass-utils/auth v0.0.0-20240109121238-1411555362c3/go.mod h1:Ys8k/OrYI1jkEgG5SRzHCmfW/1XIF2DLgN9DkyaK4xU=
 github.com/Huray-hub/eclass-utils/course v0.0.0-20231104172856-c9261b5f173b h1:M9fEG02Nmq1mk8H4iukIvd/4vESfEHx1oOIR1BSoOhc=
