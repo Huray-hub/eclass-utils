@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/Huray-hub/eclass-utils/assignment v0.0.0-20240109121238-1411555362c3
 	github.com/Huray-hub/eclass-utils/auth v0.0.0-20240109121238-1411555362c3
-	github.com/PuerkitoBio/goquery v1.9.0
+	github.com/PuerkitoBio/goquery v1.9.1
 )
 
 require (
