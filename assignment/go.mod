@@ -6,12 +6,12 @@ require (
 	github.com/Huray-hub/eclass-utils/auth v0.0.0-20240228122413-deef0b54f49a
 	github.com/Huray-hub/eclass-utils/course v0.0.0-20240228122200-db46f8f5972e
 	github.com/arran4/golang-ical v0.2.8
-	golang.org/x/term v0.19.0
+	golang.org/x/term v0.21.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
