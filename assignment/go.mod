@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/Huray-hub/eclass-utils/auth v0.0.0-20240228122413-deef0b54f49a
 	github.com/Huray-hub/eclass-utils/course v0.0.0-20240228122200-db46f8f5972e
-	github.com/arran4/golang-ical v0.2.8
+	github.com/arran4/golang-ical v0.3.1
 	golang.org/x/term v0.19.0
 	gopkg.in/yaml.v3 v3.0.1
 )
