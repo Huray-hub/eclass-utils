@@ -51,6 +51,8 @@ var timePrepositions = map[string]int{
 
 func parseTime(dateRaw string, location *time.Location) (*time.Time, error) {
 	dateRaw = strings.Replace(dateRaw, narrowNoBreakSpace, " ", 1)
+	strsplit := strings.Fields(dateRaw)[:7]
+	_ = strsplit
 	firstWord := strings.Split(dateRaw, " ")[0]
 
 	if v, ok := timePrepositions[firstWord]; ok {

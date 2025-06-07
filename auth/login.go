@@ -96,7 +96,7 @@ func postLogin(ctx context.Context, domainURL string, creds Credentials, client 
 	form.Add("submit", "")
 
 	rdr := strings.NewReader(form.Encode())
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, domainURL, rdr)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, domainURL+"/?login_page=1", rdr)
 	if err != nil {
 		return err
 	}

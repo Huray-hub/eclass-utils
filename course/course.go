@@ -46,7 +46,7 @@ func (crs Course) PrepareAssignmentsURL(baseURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	finalURL = finalURL.JoinPath("modules", "work")
+	finalURL = finalURL.JoinPath("modules", "work", "index.php")
 
 	values := finalURL.Query()
 	values.Add("course", crs.ID)

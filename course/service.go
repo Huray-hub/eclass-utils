@@ -18,7 +18,7 @@ func GetEnrolled(ctx context.Context, opts Options, client *http.Client) ([]Cour
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		"https://"+opts.BaseDomain+"/main/my_courses.php",
+		"https://"+opts.BaseDomain+"/main/portfolio.php?countPages=-1",
 		nil,
 	)
 	if err != nil {
@@ -46,13 +46,15 @@ func GetEnrolled(ctx context.Context, opts Options, client *http.Client) ([]Cour
 	// courses in total
 	courses := make([]Course, 0, 14)
 
-	doc.Find("#main-content table.table-default tbody tr").
+	doc.Find("#main table.portfolio-courses-table tbody tr").
 		Each(func(_ int, s *goquery.Selection) {
-			firsttd := s.Find("td:first-child a")
+			tds := s.Find("td")
 
-			name := firsttd.Text()
-			href, _ := firsttd.Attr("href")
-			isFavorite := s.Find("td:nth-child(2) a:first-child span").HasClass("fa-star")
+			firstTdA := tds.First().Find("a").First()
+			name := firstTdA.Text()
+			href, _ := firstTdA.Attr("href")
+
+			isFavorite := tds.Last().Find("a").Eq(1).Find("span.Primary-500-cl").Length() > 0
 
 			course := newCourse(name, href, isFavorite)
 			if course.IsExcluded(opts) {

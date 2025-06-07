@@ -2,6 +2,7 @@ package assignment
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -161,7 +162,7 @@ func (svc *Service) getAssignmentsPerCourse(ctx context.Context, course course.C
 		// instead of query first rows and then query again each row to get table cells,
 		// knowing the each row has 4, I immediately get query tds for performance improvement
 		tds := make([]*goquery.Selection, 4)
-		doc.Find("table#assignment_table tbody tr td").
+		doc.Find(fmt.Sprintf("table#assignment_table_%s tbody tr td", course.ID)).
 			Each(func(i int, td *goquery.Selection) {
 				tds[i%4] = td
 

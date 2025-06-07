@@ -71,9 +71,9 @@ func main() {
 	service, err := assignment.NewService(ctx, *cfg, nil)
 	if err != nil {
 		switch {
-		case errors.Is(auth.ErrNoCredentials, errors.Unwrap(err)):
+		case errors.Is(errors.Unwrap(err), auth.ErrNoCredentials):
 			fallthrough
-		case errors.Is(auth.ErrInvalidCredentials, errors.Unwrap(err)):
+		case errors.Is(errors.Unwrap(err), auth.ErrInvalidCredentials):
 			fmt.Println(err)
 			// clear credentials from config file only if were provided from stdin
 			if modifiedCreds {

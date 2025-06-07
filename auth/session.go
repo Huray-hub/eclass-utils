@@ -26,6 +26,7 @@ func Session(
 	ticker := time.NewTimer(TokenDuration)
 
 	go func() {
+		defer ticker.Stop()
 		for {
 			select {
 			case <-ctx.Done():
